@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@8ab4239d0babbbb7ca8f092a9606be5492e5bbbc
+      - uses: shipmate-iac/shipmate/actions/setup@1b0c1418b6e87d3eed1934cd1355462b406eeefa
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
@@ -25,10 +25,9 @@ jobs:
       - name: stale codegen check
         run: terramate generate --detailed-exit-code
       - id: matrix
-        uses: shipmate-iac/shipmate/actions/build-matrix@8ab4239d0babbbb7ca8f092a9606be5492e5bbbc
+        uses: shipmate-iac/shipmate/actions/build-matrix@1b0c1418b6e87d3eed1934cd1355462b406eeefa
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
-          github-token: ${{ github.token }}
 
   plan:
     needs: detect
@@ -48,20 +47,20 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@8ab4239d0babbbb7ca8f092a9606be5492e5bbbc
+      - uses: shipmate-iac/shipmate/actions/setup@1b0c1418b6e87d3eed1934cd1355462b406eeefa
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - name: stack slug
         id: slug
         run: echo "slug=$(echo '${{ matrix.stack }}' | tr / -)" >> "$GITHUB_OUTPUT"
-      - uses: shipmate-iac/shipmate/actions/state@8ab4239d0babbbb7ca8f092a9606be5492e5bbbc
+      - uses: shipmate-iac/shipmate/actions/state@1b0c1418b6e87d3eed1934cd1355462b406eeefa
         with:
           stack-slug: ${{ steps.slug.outputs.slug }}
           env: ${{ matrix.environment }}
           mode: restore
           path: .state
-      - uses: shipmate-iac/shipmate/actions/plan-cell@8ab4239d0babbbb7ca8f092a9606be5492e5bbbc
+      - uses: shipmate-iac/shipmate/actions/plan-cell@1b0c1418b6e87d3eed1934cd1355462b406eeefa
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -81,7 +80,7 @@ jobs:
         with:
           pattern: cell-summary-*
           path: cells
-      - uses: shipmate-iac/shipmate/actions/summary@8ab4239d0babbbb7ca8f092a9606be5492e5bbbc
+      - uses: shipmate-iac/shipmate/actions/summary@1b0c1418b6e87d3eed1934cd1355462b406eeefa
         with:
           pr-number: ${{ github.event.pull_request.number }}
           head-sha: ${{ github.event.pull_request.head.sha }}
