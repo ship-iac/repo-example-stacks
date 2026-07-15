@@ -1,0 +1,89 @@
+name: preview
+on: pull_request
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      empty: ${{ steps.matrix.outputs.empty }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: shipmate-iac/shipmate/actions/setup@829309f55cfd5eaf7c1f9533346fbcf3e9302e25
+        with:
+          terramate-version: ${{ vars.TERRAMATE_VERSION }}
+          tofu-version: ${{ vars.TOFU_VERSION }}
+      - name: fmt check
+        run: terramate fmt --check
+      - name: stale codegen check
+        run: terramate generate --detailed-exit-code
+      - id: matrix
+        uses: shipmate-iac/shipmate/actions/build-matrix@829309f55cfd5eaf7c1f9533346fbcf3e9302e25
+        with:
+          base-sha: ${{ github.event.pull_request.base.sha }}
+
+  plan:
+    needs: detect
+    if: needs.detect.outputs.empty == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    environment: ${{ matrix.environment }}
+    name: plan / ${{ matrix.environment }} / ${{ matrix.stack }}
+    env:
+      TF_VAR_env: ${{ vars.TF_VAR_env }}
+      TF_VAR_region: ${{ vars.TF_VAR_region }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: shipmate-iac/shipmate/actions/setup@829309f55cfd5eaf7c1f9533346fbcf3e9302e25
+        with:
+          terramate-version: ${{ vars.TERRAMATE_VERSION }}
+          tofu-version: ${{ vars.TOFU_VERSION }}
+      - name: stack slug
+        id: slug
+        run: echo "slug=$(echo '${{ matrix.stack }}' | tr / -)" >> "$GITHUB_OUTPUT"
+      - uses: shipmate-iac/shipmate/actions/state@829309f55cfd5eaf7c1f9533346fbcf3e9302e25
+        with:
+          stack-slug: ${{ steps.slug.outputs.slug }}
+          env: ${{ matrix.environment }}
+          mode: restore
+          path: .state
+      - uses: shipmate-iac/shipmate/actions/plan-cell@829309f55cfd5eaf7c1f9533346fbcf3e9302e25
+        with:
+          stack: ${{ matrix.stack }}
+          stack-name: ${{ matrix.stack }}
+          env: ${{ matrix.environment }}
+          head-sha: ${{ github.event.pull_request.head.sha }}
+          github-token: ${{ github.token }}
+
+  summary:
+    needs: [detect, plan]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        with:
+          pattern: cell-summary-*
+          path: cells
+      - uses: shipmate-iac/shipmate/actions/summary@829309f55cfd5eaf7c1f9533346fbcf3e9302e25
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          head-sha: ${{ github.event.pull_request.head.sha }}
+          plan-result: ${{ needs.plan.result }}
+          detect-result: ${{ needs.detect.result }}
+          github-token: ${{ github.token }}
