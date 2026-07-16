@@ -22,18 +22,18 @@ jobs:
       wave5: ${{ steps.d.outputs.wave5 }}
       wave6: ${{ steps.d.outputs.wave6 }}
       wave7: ${{ steps.d.outputs.wave7 }}
-      head-sha: ${{ steps.d.outputs.head-sha }}
-      preview-run-id: ${{ steps.d.outputs.preview-run-id }}
+      head_sha: ${{ steps.d.outputs.head_sha }}
+      preview_run_id: ${{ steps.d.outputs.preview_run_id }}
       empty: ${{ steps.d.outputs.empty }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: d
-        uses: shipmate-iac/shipmate/actions/deploy-detect@95577e080d7f1b4698996be46d81f2b2fbf6647a
+        uses: shipmate-iac/shipmate/actions/deploy-detect@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           base-sha: ${{ github.event.before }}
           github-token: ${{ github.token }}
@@ -57,17 +57,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -90,17 +90,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -123,17 +123,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -156,17 +156,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -189,17 +189,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -222,17 +222,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -255,17 +255,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
@@ -288,17 +288,17 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/setup@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@95577e080d7f1b4698996be46d81f2b2fbf6647a
+      - uses: shipmate-iac/shipmate/actions/apply-cell@8ee9a973ced42e82909e1339eacdb5cc408d4a04
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head-sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview-run-id }}
+          head-sha: ${{ needs.detect.outputs.head_sha }}
+          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
           state-path: ${{ matrix.stack }}/.state
           github-token: ${{ github.token }}
 
