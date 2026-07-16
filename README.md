@@ -34,10 +34,7 @@ The stacks, tags, and DAG below are the fixture those workflows run against.
 - Terramate 0.17.1
 - OpenTofu 1.12.4
 
-Windows/PowerShell PATH and other local-machine notes live in the workspace
-root `README.md`, not here.
-
-## Quickstart (Linux / macOS)
+## Quickstart
 
 ```bash
 git clone <this-repo-url> repo-example-stacks
@@ -66,14 +63,14 @@ Expect `tofu plan` to show 2 resources to add (`random_pet.this`,
 `terraform_data.this`) on a stack that has never been applied.
 
 > **Windows (PowerShell):** set vars with `$env:TF_VAR_env = "dev-us"` instead
-> of `export`, and refresh PATH first — see the workspace-root `README.md`.
+> of `export`.
 
 ## Repository layout
 
 ```
 repo-example-stacks/
 ├── terramate.tm.hcl          # enables the "scripts" experiment
-├── .gitattributes            # forces LF checkout (see workspace-root README)
+├── .gitattributes            # forces LF checkout of generated .tf files
 ├── tools/
 │   └── mutate-state.ps1      # drift fixture helper
 └── stacks/
