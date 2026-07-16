@@ -37,16 +37,6 @@ jobs:
         with:
           base-sha: ${{ github.event.before }}
           github-token: ${{ github.token }}
-      - name: DEBUG detect outputs (parent-level)
-        env:
-          W0: ${{ steps.d.outputs.wave0 }}
-          W4: ${{ steps.d.outputs.wave4 }}
-          EMPTY: ${{ steps.d.outputs.empty }}
-          HS: ${{ steps.d.outputs.head_sha }}
-        run: |
-          echo "DBG empty=$EMPTY head=$HS"
-          echo "DBG wave0=$W0"
-          echo "DBG wave4=$W4"
 
   wave0:
     needs: [detect]

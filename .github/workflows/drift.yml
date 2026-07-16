@@ -1,0 +1,54 @@
+name: drift
+on:
+  schedule:
+    - cron: "17 3 * * *"   # nightly, off-peak
+  workflow_dispatch: {}     # manual trigger for acceptance
+permissions:
+  contents: read
+  issues: write
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+      empty: ${{ steps.m.outputs.empty }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: shipmate-iac/shipmate/actions/setup@bf9d9df0eb6565d4dd495e379fbf2d6aecb317b3
+        with:
+          terramate-version: ${{ vars.TERRAMATE_VERSION }}
+          tofu-version: ${{ vars.TOFU_VERSION }}
+      - id: m
+        uses: shipmate-iac/shipmate/actions/build-matrix@bf9d9df0eb6565d4dd495e379fbf2d6aecb317b3
+        with:
+          base-sha: ""
+          all-stacks: "true"
+  drift:
+    needs: detect
+    if: needs.detect.outputs.empty == 'false'
+    runs-on: ubuntu-latest
+    permissions: { contents: read, issues: write }
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    environment: ${{ matrix.environment }}
+    name: drift / ${{ matrix.environment }} / ${{ matrix.stack }}
+    env:
+      TF_VAR_env: ${{ vars.TF_VAR_env }}
+      TF_VAR_region: ${{ vars.TF_VAR_region }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: shipmate-iac/shipmate/actions/setup@bf9d9df0eb6565d4dd495e379fbf2d6aecb317b3
+        with:
+          terramate-version: ${{ vars.TERRAMATE_VERSION }}
+          tofu-version: ${{ vars.TOFU_VERSION }}
+      - uses: shipmate-iac/shipmate/actions/drift-cell@bf9d9df0eb6565d4dd495e379fbf2d6aecb317b3
+        with:
+          stack: ${{ matrix.stack }}
+          stack-name: ${{ matrix.stack }}
+          env: ${{ matrix.environment }}
+          state-path: ${{ matrix.stack }}/.state
+          github-token: ${{ github.token }}
+          slack-webhook: ${{ vars.SLACK_WEBHOOK }}
