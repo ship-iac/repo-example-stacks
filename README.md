@@ -70,7 +70,6 @@ Expect `tofu plan` to show 2 resources to add (`random_pet.this`,
 ```
 repo-example-stacks/
 ├── terramate.tm.hcl          # enables the "scripts" experiment
-├── .gitattributes            # forces LF checkout of generated .tf files
 ├── tools/
 │   └── mutate-state.ps1      # drift fixture helper
 └── stacks/
