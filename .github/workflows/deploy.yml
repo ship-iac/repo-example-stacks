@@ -55,7 +55,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave0) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave0) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -88,7 +89,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave1) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave1) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -121,7 +123,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave2) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave2) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -154,7 +157,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave3) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave3) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -187,7 +191,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave4) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave4) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -220,7 +225,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave5) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave5) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -253,7 +259,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave6) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave6) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
@@ -286,7 +293,8 @@ jobs:
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.detect.outputs.wave7) }}
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.wave7) }}
     environment: ${{ matrix.environment }}-apply
     concurrency:
       group: apply-${{ matrix.environment }}-${{ matrix.stack }}
