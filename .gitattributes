@@ -1,7 +1,0 @@
-# Terramate generates these files with LF line endings and fingerprints their
-# content to detect manual edits. On Windows, core.autocrlf=true rewrites LF
-# to CRLF on checkout, which makes `terramate generate` think the generated
-# files were hand-edited ("manually defined code found") and refuse to
-# regenerate them. Force LF for all text in this repo so a fresh clone works
-# the same on Windows as anywhere else.
-* text=auto eol=lf
