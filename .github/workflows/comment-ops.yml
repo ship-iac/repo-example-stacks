@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: authz
-        uses: shipmate-iac/shipmate/actions/comment-ops@57a4aca33c498eaa1cee1e071476bc7b017d6af3
+        uses: shipmate-iac/shipmate/actions/comment-ops@bf288c94f8481f5703cf476661a9e1dd4b6cb834
         with:
           app-id: ${{ vars.SHIPMATE_APP_ID }}
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
@@ -27,7 +27,7 @@ jobs:
           pr-number: ${{ github.event.issue.number }}
           github-token: ${{ github.token }}
       - if: ${{ steps.authz.outputs.authorized == 'true' }}
-        uses: shipmate-iac/shipmate/actions/dispatch@57a4aca33c498eaa1cee1e071476bc7b017d6af3
+        uses: shipmate-iac/shipmate/actions/dispatch@bf288c94f8481f5703cf476661a9e1dd4b6cb834
         with:
           app-id: ${{ vars.SHIPMATE_APP_ID }}
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
