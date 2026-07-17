@@ -14,304 +14,75 @@ jobs:
   detect:
     runs-on: ubuntu-latest
     outputs:
-      wave0: ${{ steps.d.outputs.wave0 }}
-      wave1: ${{ steps.d.outputs.wave1 }}
-      wave2: ${{ steps.d.outputs.wave2 }}
-      wave3: ${{ steps.d.outputs.wave3 }}
-      wave4: ${{ steps.d.outputs.wave4 }}
-      wave5: ${{ steps.d.outputs.wave5 }}
-      wave6: ${{ steps.d.outputs.wave6 }}
-      wave7: ${{ steps.d.outputs.wave7 }}
+      envlevel0_waves: ${{ steps.d.outputs.envlevel0_waves }}
+      envlevel1_waves: ${{ steps.d.outputs.envlevel1_waves }}
+      envlevel2_waves: ${{ steps.d.outputs.envlevel2_waves }}
+      envlevel3_waves: ${{ steps.d.outputs.envlevel3_waves }}
+      envlevel0_empty: ${{ steps.d.outputs.envlevel0_empty }}
+      envlevel1_empty: ${{ steps.d.outputs.envlevel1_empty }}
+      envlevel2_empty: ${{ steps.d.outputs.envlevel2_empty }}
+      envlevel3_empty: ${{ steps.d.outputs.envlevel3_empty }}
       head_sha: ${{ steps.d.outputs.head_sha }}
       preview_run_id: ${{ steps.d.outputs.preview_run_id }}
-      empty: ${{ steps.d.outputs.empty }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
+      - uses: shipmate-iac/shipmate/actions/setup@c6e07dcc69ec2d025b4677ef754bfc3432f02e5e
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: d
-        uses: shipmate-iac/shipmate/actions/deploy-detect@25d57c38bf04df01c06cedf3f0162d1cd393116e
+        uses: shipmate-iac/shipmate/actions/deploy-detect@c6e07dcc69ec2d025b4677ef754bfc3432f02e5e
         with:
           base-sha: ${{ github.event.before }}
           github-token: ${{ github.token }}
 
-  wave0:
+  envlevel0:
     needs: [detect]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave0 != '[]' }}
-    runs-on: ubuntu-latest
+    if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel0_empty != 'true' }}
+    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@c6e07dcc69ec2d025b4677ef754bfc3432f02e5e
     permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave0) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
+    with:
+      waves_json: ${{ needs.detect.outputs.envlevel0_waves }}
+      head_sha: ${{ needs.detect.outputs.head_sha }}
+      preview_run_id: ${{ needs.detect.outputs.preview_run_id }}
+      state_suffix: .state
 
-  wave1:
-    needs: [detect, wave0]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave1 != '[]' }}
-    runs-on: ubuntu-latest
+  envlevel1:
+    needs: [detect, envlevel0]
+    if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel1_empty != 'true' }}
+    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@c6e07dcc69ec2d025b4677ef754bfc3432f02e5e
     permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave1) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
+    with:
+      waves_json: ${{ needs.detect.outputs.envlevel1_waves }}
+      head_sha: ${{ needs.detect.outputs.head_sha }}
+      preview_run_id: ${{ needs.detect.outputs.preview_run_id }}
+      state_suffix: .state
 
-  wave2:
-    needs: [detect, wave0, wave1]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave2 != '[]' }}
-    runs-on: ubuntu-latest
+  envlevel2:
+    needs: [detect, envlevel0, envlevel1]
+    if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel2_empty != 'true' }}
+    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@c6e07dcc69ec2d025b4677ef754bfc3432f02e5e
     permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave2) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
+    with:
+      waves_json: ${{ needs.detect.outputs.envlevel2_waves }}
+      head_sha: ${{ needs.detect.outputs.head_sha }}
+      preview_run_id: ${{ needs.detect.outputs.preview_run_id }}
+      state_suffix: .state
 
-  wave3:
-    needs: [detect, wave0, wave1, wave2]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave3 != '[]' }}
-    runs-on: ubuntu-latest
+  envlevel3:
+    needs: [detect, envlevel0, envlevel1, envlevel2]
+    if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel3_empty != 'true' }}
+    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@c6e07dcc69ec2d025b4677ef754bfc3432f02e5e
     permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave3) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
-
-  wave4:
-    needs: [detect, wave0, wave1, wave2, wave3]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave4 != '[]' }}
-    runs-on: ubuntu-latest
-    permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave4) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
-
-  wave5:
-    needs: [detect, wave0, wave1, wave2, wave3, wave4]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave5 != '[]' }}
-    runs-on: ubuntu-latest
-    permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave5) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
-
-  wave6:
-    needs: [detect, wave0, wave1, wave2, wave3, wave4, wave5]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave6 != '[]' }}
-    runs-on: ubuntu-latest
-    permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave6) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
-
-  wave7:
-    needs: [detect, wave0, wave1, wave2, wave3, wave4, wave5, wave6]
-    if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave7 != '[]' }}
-    runs-on: ubuntu-latest
-    permissions: { contents: read, checks: write, actions: read }
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.wave7) }}
-    environment: ${{ matrix.environment }}-apply
-    concurrency:
-      group: apply-${{ matrix.environment }}-${{ matrix.stack }}
-      cancel-in-progress: false
-    name: apply / ${{ matrix.environment }} / ${{ matrix.stack }}
-    env:
-      TF_VAR_env: ${{ vars.TF_VAR_env }}
-      TF_VAR_region: ${{ vars.TF_VAR_region }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          terramate-version: ${{ vars.TERRAMATE_VERSION }}
-          tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@25d57c38bf04df01c06cedf3f0162d1cd393116e
-        with:
-          stack: ${{ matrix.stack }}
-          stack-name: ${{ matrix.stack }}
-          env: ${{ matrix.environment }}
-          head-sha: ${{ needs.detect.outputs.head_sha }}
-          preview-run-id: ${{ needs.detect.outputs.preview_run_id }}
-          state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
+    with:
+      waves_json: ${{ needs.detect.outputs.envlevel3_waves }}
+      head_sha: ${{ needs.detect.outputs.head_sha }}
+      preview_run_id: ${{ needs.detect.outputs.preview_run_id }}
+      state_suffix: .state
 
   summary:
-    needs: [detect, wave0, wave1, wave2, wave3, wave4, wave5, wave6, wave7]
+    needs: [detect, envlevel0, envlevel1, envlevel2, envlevel3]
     if: always()
     runs-on: ubuntu-latest
     permissions: { checks: write }
@@ -324,13 +95,13 @@ jobs:
         run: |
           set -euo pipefail
           if echo "$RESULTS" | grep -q failure; then concl=failure; title="deploy incomplete";
-          else concl=success; title="all waves applied"; fi
+          else concl=success; title="all env-levels applied"; fi
           python3 - "$HEAD_SHA" "$concl" "$title" > body.json <<'PY'
           import json, sys
           head, concl, title = sys.argv[1:4]
           print(json.dumps({"name": "shipmate / checkmate", "head_sha": head,
               "status": "completed", "conclusion": concl,
-              "output": {"title": title, "summary": "Deploy wave applies completed."}}))
+              "output": {"title": title, "summary": "Deploy env-level applies completed."}}))
           PY
           gh api "repos/$GITHUB_REPOSITORY/check-runs" --input body.json >/dev/null
       - name: Slack on failed deploy (outranks drift)
