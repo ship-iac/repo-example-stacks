@@ -1,0 +1,21 @@
+name: test-approve
+# Acceptance-testing helper ONLY: approves a PR as github-actions[bot] so the
+# comment-ops apply-path (which requires an approved PR) can be exercised with a
+# single human account. NOT part of the shipmate engine; do not use in real repos.
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: PR number to approve (acceptance testing only)
+        required: true
+permissions:
+  pull-requests: write
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve as github-actions[bot]
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.inputs.pr }}
+        run: gh pr review "$PR" --repo "$GITHUB_REPOSITORY" --approve --body "Automated approval for acceptance testing (test-approve)."
