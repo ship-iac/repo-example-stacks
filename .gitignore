@@ -2,3 +2,4 @@
 .terraform.lock.hcl
 .state/
 *.otplan
+fingerprint.txt
