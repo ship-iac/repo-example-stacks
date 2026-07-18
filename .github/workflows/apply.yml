@@ -31,12 +31,12 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.inputs.ref }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: d
-        uses: ship-iac/shipmate/actions/apply-detect@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+        uses: ship-iac/shipmate/actions/apply-detect@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           environment: ${{ github.event.inputs.environment }}
           plan-run-id: ${{ github.event.inputs.plan_run_id }}
@@ -65,11 +65,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -101,11 +101,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -137,11 +137,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -173,11 +173,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -209,11 +209,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -245,11 +245,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -281,11 +281,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -317,11 +317,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: ship-iac/shipmate/actions/setup@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/setup@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/apply-cell@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
+      - uses: ship-iac/shipmate/actions/apply-cell@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -336,6 +336,12 @@ jobs:
     if: always()
     runs-on: ubuntu-slim
     steps:
+      - name: Complete checkmate if every apply check is done
+        id: gate
+        uses: ship-iac/shipmate/actions/checkmate-refresh@a73834ee08553ba2c4a1d7e3aed9d64622c3e5db
+        with:
+          head-sha: ${{ github.event.inputs.ref }}
+          github-token: ${{ github.token }}
       - name: App token for result comment
         id: token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -344,21 +350,24 @@ jobs:
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
-      - name: Result comment via the App (does NOT complete checkmate)
+      - name: Result comment via the App
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
           PR_NUMBER: ${{ github.event.inputs.pr_number }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
           RESULTS: ${{ join(needs.*.result, ',') }}
+          GATE: ${{ steps.gate.outputs.verdict }}
         run: |
           set -euo pipefail
           if echo "$RESULTS" | grep -q failure; then emoji=":x:"; word="failed";
           else emoji=":white_check_mark:"; word="applied"; fi
-          python3 - "$emoji" "$word" "$ENVIRONMENT" > body.json <<'PY'
+          python3 - "$emoji" "$word" "$ENVIRONMENT" "$GATE" > body.json <<'PY'
           import json, sys
-          emoji, word, env = sys.argv[1:4]
-          print(json.dumps({"body": f"{emoji} shipmate: `mate apply {env}` {word}. "
-                                     f"`shipmate / checkmate` stays pending until every "
-                                     f"environment is applied (or the merge deploy runs)."}))
+          emoji, word, env, gate = sys.argv[1:5]
+          tail = ("`shipmate / checkmate` is complete — every environment is applied."
+                  if gate == "complete" else
+                  "`shipmate / checkmate` stays pending until every "
+                  "environment is applied (or the merge deploy runs).")
+          print(json.dumps({"body": f"{emoji} shipmate: `mate apply {env}` {word}. " + tail}))
           PY
           gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --input body.json >/dev/null
