@@ -12,7 +12,7 @@ permissions:
   pull-requests: write
 jobs:
   approve:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Approve as github-actions[bot]
         env:

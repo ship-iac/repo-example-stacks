@@ -8,7 +8,7 @@ permissions:
   issues: write
 jobs:
   detect:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     outputs:
       matrix: ${{ steps.m.outputs.matrix }}
       empty: ${{ steps.m.outputs.empty }}
@@ -27,7 +27,7 @@ jobs:
   drift:
     needs: detect
     if: needs.detect.outputs.empty == 'false'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, issues: write }
     strategy:
       fail-fast: false

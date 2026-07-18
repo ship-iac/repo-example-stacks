@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   detect:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: read
     outputs:
@@ -32,7 +32,7 @@ jobs:
   plan:
     needs: detect
     if: needs.detect.outputs.empty == 'false'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: read
       checks: write
@@ -71,7 +71,7 @@ jobs:
   summary:
     needs: [detect, plan]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       checks: write
       pull-requests: write
