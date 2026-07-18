@@ -31,12 +31,12 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.inputs.ref }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: d
-        uses: shipmate-iac/shipmate/actions/apply-detect@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+        uses: ship-iac/shipmate/actions/apply-detect@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           environment: ${{ github.event.inputs.environment }}
           plan-run-id: ${{ github.event.inputs.plan_run_id }}
@@ -65,11 +65,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -101,11 +101,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -137,11 +137,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -173,11 +173,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -209,11 +209,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -245,11 +245,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -281,11 +281,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -317,11 +317,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ needs.detect.outputs.head_sha }}
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: shipmate-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/apply-cell@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}

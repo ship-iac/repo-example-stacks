@@ -27,12 +27,12 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with: { fetch-depth: 0 }
-      - uses: shipmate-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+      - uses: ship-iac/shipmate/actions/setup@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: d
-        uses: shipmate-iac/shipmate/actions/deploy-detect@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+        uses: ship-iac/shipmate/actions/deploy-detect@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
         with:
           base-sha: ${{ github.event.before }}
           github-token: ${{ github.token }}
@@ -40,7 +40,7 @@ jobs:
   envlevel0:
     needs: [detect]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel0_empty != 'true' }}
-    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+    uses: ship-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
     permissions: { contents: read, checks: write, actions: read }
     with:
       waves_json: ${{ needs.detect.outputs.envlevel0_waves }}
@@ -51,7 +51,7 @@ jobs:
   envlevel1:
     needs: [detect, envlevel0]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel1_empty != 'true' }}
-    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+    uses: ship-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
     permissions: { contents: read, checks: write, actions: read }
     with:
       waves_json: ${{ needs.detect.outputs.envlevel1_waves }}
@@ -62,7 +62,7 @@ jobs:
   envlevel2:
     needs: [detect, envlevel0, envlevel1]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel2_empty != 'true' }}
-    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+    uses: ship-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
     permissions: { contents: read, checks: write, actions: read }
     with:
       waves_json: ${{ needs.detect.outputs.envlevel2_waves }}
@@ -73,7 +73,7 @@ jobs:
   envlevel3:
     needs: [detect, envlevel0, envlevel1, envlevel2]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.envlevel3_empty != 'true' }}
-    uses: shipmate-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
+    uses: ship-iac/shipmate/.github/workflows/apply-env-level.yml@0949e06168e2cb29705b96d1aa7b34c21e6f79ca
     permissions: { contents: read, checks: write, actions: read }
     with:
       waves_json: ${{ needs.detect.outputs.envlevel3_waves }}
