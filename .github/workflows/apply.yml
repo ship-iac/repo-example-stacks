@@ -13,7 +13,7 @@ permissions:
   pull-requests: read
 jobs:
   detect:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     outputs:
       wave0: ${{ steps.d.outputs.wave0 }}
       wave1: ${{ steps.d.outputs.wave1 }}
@@ -46,7 +46,7 @@ jobs:
   wave0:
     needs: [detect]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave0 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -82,7 +82,7 @@ jobs:
   wave1:
     needs: [detect, wave0]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave1 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -118,7 +118,7 @@ jobs:
   wave2:
     needs: [detect, wave0, wave1]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave2 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -154,7 +154,7 @@ jobs:
   wave3:
     needs: [detect, wave0, wave1, wave2]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave3 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -190,7 +190,7 @@ jobs:
   wave4:
     needs: [detect, wave0, wave1, wave2, wave3]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave4 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -226,7 +226,7 @@ jobs:
   wave5:
     needs: [detect, wave0, wave1, wave2, wave3, wave4]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave5 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -262,7 +262,7 @@ jobs:
   wave6:
     needs: [detect, wave0, wave1, wave2, wave3, wave4, wave5]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave6 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -298,7 +298,7 @@ jobs:
   wave7:
     needs: [detect, wave0, wave1, wave2, wave3, wave4, wave5, wave6]
     if: ${{ !failure() && !cancelled() && needs.detect.outputs.wave7 != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { contents: read, checks: write, actions: read }
     strategy:
       fail-fast: false
@@ -334,7 +334,7 @@ jobs:
   summary:
     needs: [detect, wave0, wave1, wave2, wave3, wave4, wave5, wave6, wave7]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: App token for result comment
         id: token

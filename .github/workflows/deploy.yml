@@ -12,7 +12,7 @@ permissions:
   actions: read
 jobs:
   detect:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     outputs:
       envlevel0_waves: ${{ steps.d.outputs.envlevel0_waves }}
       envlevel1_waves: ${{ steps.d.outputs.envlevel1_waves }}
@@ -84,7 +84,7 @@ jobs:
   summary:
     needs: [detect, envlevel0, envlevel1, envlevel2, envlevel3]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions: { checks: write }
     steps:
       - name: Complete checkmate on the merged PR head SHA

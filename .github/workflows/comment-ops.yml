@@ -13,7 +13,7 @@ jobs:
   ops:
     # Only PR comments (issue_comment fires on issues too).
     if: ${{ github.event.issue.pull_request }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - id: authz
         uses: ship-iac/shipmate/actions/comment-ops@dc38d5fc201f833c899bdbeecd0a6fe1cd6b6821
