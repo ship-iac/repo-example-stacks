@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@0a32cc80d8f703dd0b16e7dac2e0b4bed3b8673d
+      - uses: ship-iac/shipmate/actions/setup@6ddf3692a0ed6f00a0c0f8549e1fd2c9755b01ac
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
@@ -25,7 +25,7 @@ jobs:
       - name: stale codegen check
         run: terramate generate --detailed-exit-code
       - id: matrix
-        uses: ship-iac/shipmate/actions/build-matrix@0a32cc80d8f703dd0b16e7dac2e0b4bed3b8673d
+        uses: ship-iac/shipmate/actions/build-matrix@6ddf3692a0ed6f00a0c0f8549e1fd2c9755b01ac
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
 
@@ -47,20 +47,20 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@0a32cc80d8f703dd0b16e7dac2e0b4bed3b8673d
+      - uses: ship-iac/shipmate/actions/setup@6ddf3692a0ed6f00a0c0f8549e1fd2c9755b01ac
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - name: stack slug
         id: slug
         run: echo "slug=$(echo '${{ matrix.stack }}' | tr / -)" >> "$GITHUB_OUTPUT"
-      - uses: ship-iac/shipmate/actions/state@0a32cc80d8f703dd0b16e7dac2e0b4bed3b8673d
+      - uses: ship-iac/shipmate/actions/state@6ddf3692a0ed6f00a0c0f8549e1fd2c9755b01ac
         with:
           stack-slug: ${{ steps.slug.outputs.slug }}
           env: ${{ matrix.environment }}
           mode: restore
           path: ${{ matrix.stack }}/.state
-      - uses: ship-iac/shipmate/actions/plan-cell@0a32cc80d8f703dd0b16e7dac2e0b4bed3b8673d
+      - uses: ship-iac/shipmate/actions/plan-cell@6ddf3692a0ed6f00a0c0f8549e1fd2c9755b01ac
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -78,9 +78,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          pattern: cell-summary-*
+          pattern: cell-summary.*
           path: cells
-      - uses: ship-iac/shipmate/actions/summary@0a32cc80d8f703dd0b16e7dac2e0b4bed3b8673d
+      - uses: ship-iac/shipmate/actions/summary@6ddf3692a0ed6f00a0c0f8549e1fd2c9755b01ac
         with:
           pr-number: ${{ github.event.pull_request.number }}
           head-sha: ${{ github.event.pull_request.head.sha }}
