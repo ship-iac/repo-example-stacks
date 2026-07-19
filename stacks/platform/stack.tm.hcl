@@ -5,3 +5,5 @@ stack {
   after       = ["/stacks/dns"]
   id          = "814c3c27-5532-49cc-964a-b81411c44594"
 }
+
+# preview-comment E2E: no-op cell fixture (comment-only change)
