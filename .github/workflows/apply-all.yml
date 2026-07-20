@@ -1,0 +1,22 @@
+name: apply-all
+on:
+  workflow_dispatch:
+    inputs:
+      ref: { description: PR head SHA to apply, required: true }
+      pr_number: { description: PR number, required: true }
+      plan_run_id: { description: Preview run id with the reviewed plans, required: true }
+permissions:
+  contents: read
+  checks: write
+  actions: read
+  pull-requests: read
+jobs:
+  apply-all:
+    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@e7bf3d9ce8cbcd18f4ad25b6332555b728feb75b
+    permissions: { contents: read, checks: write, actions: read }
+    secrets: inherit
+    with:
+      ref: ${{ github.event.inputs.ref }}
+      pr_number: ${{ github.event.inputs.pr_number }}
+      plan_run_id: ${{ github.event.inputs.plan_run_id }}
+      state_suffix: .state
