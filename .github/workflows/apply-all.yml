@@ -12,7 +12,7 @@ permissions:
   pull-requests: read
 jobs:
   apply-all:
-    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@e7bf3d9ce8cbcd18f4ad25b6332555b728feb75b
+    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@6fff5eb6e642e0184639fbfdeaf5e632fca64e1e
     permissions: { contents: read, checks: write, actions: read }
     secrets: inherit
     with:
