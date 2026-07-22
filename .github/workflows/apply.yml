@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: Target environment (empty = bare `mate apply`, all non-explicit environments)
+        description: Target environment (empty = bare `shipmate apply`, all non-explicit environments)
         required: false
         default: ''
       ref: { description: PR head SHA to apply, required: true }
       pr_number: { description: PR number, required: true }
-      plan_run_id: { description: Preview run id with the reviewed plans, required: true }
+      plan_run_id: { description: Plan run id with the reviewed plans, required: true }
 permissions:
   contents: read
   checks: write

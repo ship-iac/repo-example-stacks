@@ -23,7 +23,7 @@ The engine ships three workflows (pinned by commit SHA in
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
-| `preview.yml` | pull request | fan out one plan per stack × env, publish plan artifacts, create a pending apply check per cell, gate on `shipmate / checkmate` |
+| `plan.yml` | pull request | fan out one plan per stack × env, publish plan artifacts, create a pending apply check per cell, gate on `shipmate / gate` |
 | `deploy.yml` | push to `main` | apply the reviewed plans in **waves** (topological levels of the `after` DAG) |
 | `drift.yml` | schedule | plan every stack × env and open/update/close a drift issue |
 
