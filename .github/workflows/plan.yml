@@ -1,5 +1,7 @@
 name: plan
-on: pull_request
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 concurrency:
   group: plan-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -7,6 +9,7 @@ permissions:
   contents: read
 jobs:
   detect:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-slim
     permissions:
       contents: read
@@ -71,7 +74,7 @@ jobs:
 
   summary:
     needs: [detect, plan]
-    if: always()
+    if: ${{ always() && github.event.pull_request.draft == false }}
     runs-on: ubuntu-slim
     permissions:
       checks: write
