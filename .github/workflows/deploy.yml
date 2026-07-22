@@ -12,7 +12,7 @@ permissions:
   actions: read
 jobs:
   deploy:
-    uses: ship-iac/shipmate/.github/workflows/deploy.yml@74a0e452fb01577d8b61f8589b2a09b0c8112b7f
+    uses: ship-iac/shipmate/.github/workflows/deploy.yml@3cea4b54ce6f378ca29727fc5daa6eb9db0e43e5
     permissions: { contents: read, checks: write, pull-requests: read, actions: read }
     secrets: inherit
     with:
