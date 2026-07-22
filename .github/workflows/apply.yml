@@ -17,7 +17,7 @@ permissions:
 jobs:
   targeted:
     if: ${{ inputs.environment != '' }}
-    uses: ship-iac/shipmate/.github/workflows/apply.yml@6adc944eec3c80e9dd64d33a6a2070c08b1b2d29
+    uses: ship-iac/shipmate/.github/workflows/apply.yml@74a0e452fb01577d8b61f8589b2a09b0c8112b7f
     permissions: { contents: read, checks: write, actions: read }
     secrets: inherit
     with:
@@ -28,7 +28,7 @@ jobs:
       state_suffix: .state
   all:
     if: ${{ inputs.environment == '' }}
-    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@6adc944eec3c80e9dd64d33a6a2070c08b1b2d29
+    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@74a0e452fb01577d8b61f8589b2a09b0c8112b7f
     permissions: { contents: read, checks: write, actions: read }
     secrets: inherit
     with:
