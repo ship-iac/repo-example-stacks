@@ -1,4 +1,4 @@
-name: drift
+name: shipmate · drift
 on:
   schedule:
     - cron: "17 3 * * *"   # nightly, off-peak
@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
     environment: ${{ matrix.environment }}
-    name: drift / ${{ matrix.environment }} / ${{ matrix.stack }}
+    name: ${{ matrix.stack }} / ${{ matrix.environment }}
     env:
       TF_VAR_env: ${{ vars.TF_VAR_env }}
       TF_VAR_region: ${{ vars.TF_VAR_region }}
