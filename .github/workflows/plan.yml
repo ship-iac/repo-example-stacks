@@ -17,7 +17,7 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       empty: ${{ steps.matrix.outputs.empty }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
       - uses: ship-iac/shipmate/actions/setup@3cea4b54ce6f378ca29727fc5daa6eb9db0e43e5
         with:
@@ -48,7 +48,7 @@ jobs:
       TF_VAR_env: ${{ vars.TF_VAR_env }}
       TF_VAR_region: ${{ vars.TF_VAR_region }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
       - uses: ship-iac/shipmate/actions/setup@3cea4b54ce6f378ca29727fc5daa6eb9db0e43e5
         with:
