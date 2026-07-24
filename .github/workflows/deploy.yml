@@ -7,13 +7,12 @@ concurrency:
   cancel-in-progress: false
 permissions:
   contents: read
-  checks: write
   pull-requests: read
   actions: read
 jobs:
   deploy:
-    uses: ship-iac/shipmate/.github/workflows/deploy.yml@b01dd86affbe43b93efb7a46ac60aaa3b0bf423d
-    permissions: { contents: read, checks: write, statuses: write, pull-requests: read, actions: read }
+    uses: ship-iac/shipmate/.github/workflows/deploy.yml@2868122c6b372146e0879556e3dcb9f226265f6b
+    permissions: { contents: read, checks: read, pull-requests: read, actions: read }
     secrets: inherit
     with:
       state_suffix: .state
