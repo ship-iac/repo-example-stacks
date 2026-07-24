@@ -1,21 +1,36 @@
 name: test-approve
-# Acceptance-testing helper ONLY: approves a PR as github-actions[bot] so the
-# comment-ops apply-path (which requires an approved PR) can be exercised with a
-# single human account. NOT part of the shipmate engine; do not use in real repos.
+# Acceptance-testing helper ONLY: posts a review as github-actions[bot] so the
+# comment-ops apply-path (whose authorization follows the branch ruleset's
+# reviewDecision) can be exercised with a single human account. Defaults to
+# APPROVE; pass event=REQUEST_CHANGES to exercise the changes-requested block.
+# NOT part of the shipmate engine; do not use in real repos.
 on:
   workflow_dispatch:
     inputs:
       pr:
-        description: PR number to approve (acceptance testing only)
+        description: PR number to review (acceptance testing only)
         required: true
+      event:
+        description: Review event — APPROVE or REQUEST_CHANGES
+        required: false
+        default: APPROVE
+        type: choice
+        options:
+          - APPROVE
+          - REQUEST_CHANGES
 permissions:
   pull-requests: write
 jobs:
-  approve:
+  review:
     runs-on: ubuntu-slim
     steps:
-      - name: Approve as github-actions[bot]
+      - name: Post review as github-actions[bot]
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.inputs.pr }}
-        run: gh pr review "$PR" --repo "$GITHUB_REPOSITORY" --approve --body "Automated approval for acceptance testing (test-approve)."
+          EVENT: ${{ github.event.inputs.event }}
+        run: |
+          set -euo pipefail
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pulls/$PR/reviews" \
+            -f event="$EVENT" \
+            -f body="Automated review ($EVENT) for acceptance testing (test-approve)."
