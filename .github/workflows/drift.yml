@@ -5,7 +5,6 @@ on:
   workflow_dispatch: {}     # manual trigger for acceptance
 permissions:
   contents: read
-  issues: write
 jobs:
   detect:
     runs-on: ubuntu-slim
@@ -15,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@b01dd86affbe43b93efb7a46ac60aaa3b0bf423d
+      - uses: ship-iac/shipmate/actions/setup@2868122c6b372146e0879556e3dcb9f226265f6b
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: m
-        uses: ship-iac/shipmate/actions/build-matrix@b01dd86affbe43b93efb7a46ac60aaa3b0bf423d
+        uses: ship-iac/shipmate/actions/build-matrix@2868122c6b372146e0879556e3dcb9f226265f6b
         with:
           base-sha: ""
           all-stacks: "true"
@@ -28,7 +27,7 @@ jobs:
     needs: detect
     if: needs.detect.outputs.empty == 'false'
     runs-on: ubuntu-slim
-    permissions: { contents: read, issues: write }
+    permissions: { contents: read }
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
@@ -40,15 +39,16 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@b01dd86affbe43b93efb7a46ac60aaa3b0bf423d
+      - uses: ship-iac/shipmate/actions/setup@2868122c6b372146e0879556e3dcb9f226265f6b
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/drift-cell@b01dd86affbe43b93efb7a46ac60aaa3b0bf423d
+      - uses: ship-iac/shipmate/actions/drift-cell@2868122c6b372146e0879556e3dcb9f226265f6b
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
           env: ${{ matrix.environment }}
           state-path: ${{ matrix.stack }}/.state
-          github-token: ${{ github.token }}
+          app-id: ${{ vars.SHIPMATE_APP_ID }}
+          private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
           slack-webhook: ${{ vars.SLACK_WEBHOOK }}
