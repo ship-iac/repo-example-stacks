@@ -1,3 +1,3 @@
 globals {
-  fail_apply = true
+  fail_apply = false
 }
