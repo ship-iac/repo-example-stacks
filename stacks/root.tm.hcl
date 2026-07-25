@@ -1,5 +1,5 @@
 globals {
-  version = "3"
+  version = "5"
   # Acceptance fixture: when true, this stack PLANS clean but FAILS at apply.
   # An HCL global (not a TF_VAR) so it cannot perturb the TF_VAR fingerprint —
   # a fingerprint change would abort the apply as blocked instead of letting it
