@@ -15,6 +15,10 @@ resource "terraform_data" "this" {
       condition     = !var.fail_precondition
       error_message = "fail_precondition fixture is enabled"
     }
+    precondition {
+      condition     = !var.fail_apply || startswith(random_pet.this.id, "zzz-never-matches")
+      error_message = "fail_apply fixture is enabled - this stack fails during apply by design"
+    }
   }
 }
 output "name" {

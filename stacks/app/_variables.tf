@@ -14,3 +14,7 @@ variable "fail_precondition" {
   default = false
   type    = bool
 }
+variable "fail_apply" {
+  default = false
+  type    = bool
+}

@@ -1,5 +1,10 @@
 globals {
   version = "3"
+  # Acceptance fixture: when true, this stack PLANS clean but FAILS at apply.
+  # An HCL global (not a TF_VAR) so it cannot perturb the TF_VAR fingerprint —
+  # a fingerprint change would abort the apply as blocked instead of letting it
+  # run and fail, which is a different path.
+  fail_apply = false
 }
 
 generate_hcl "_backend.tf" {
@@ -37,6 +42,10 @@ generate_hcl "_variables.tf" {
       type    = bool
       default = false
     }
+    variable "fail_apply" {
+      type    = bool
+      default = global.fail_apply
+    }
   }
 }
 
@@ -54,6 +63,14 @@ generate_hcl "_main.tf" {
         precondition {
           condition     = !var.fail_precondition
           error_message = "fail_precondition fixture is enabled"
+        }
+        # Deliberately references a value unknown until apply, so the
+        # precondition is deferred: the plan stays clean and the failure lands
+        # during apply. A condition built only from plan-time-known values would
+        # fail the PLAN instead, which never yields a failed apply cell.
+        precondition {
+          condition     = !var.fail_apply || startswith(random_pet.this.id, "zzz-never-matches")
+          error_message = "fail_apply fixture is enabled - this stack fails during apply by design"
         }
       }
     }
