@@ -1,4 +1,4 @@
-name: apply
+name: shipmate · apply
 on:
   workflow_dispatch:
     inputs:
