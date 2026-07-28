@@ -1,4 +1,4 @@
-name: deploy
+name: shipmate · deploy
 on:
   push:
     branches: [main]
@@ -11,7 +11,10 @@ permissions:
   actions: read
 jobs:
   deploy:
-    uses: ship-iac/shipmate/.github/workflows/deploy.yml@aa4d8b775a714fbabeef395255047bd9588c8848 # v0.1.0
+    # Display only: the run's job path reads
+    # `shipmate · deploy / post-merge / L<n> / apply / <stack> / <env>`.
+    name: post-merge
+    uses: ship-iac/shipmate/.github/workflows/deploy.yml@83b37bb5e0baa9256b1ea49f4725cf7f55157c8a
     permissions: { contents: read, checks: read, pull-requests: read, actions: read }
     secrets: inherit
     with:
