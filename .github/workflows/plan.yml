@@ -9,6 +9,7 @@ permissions:
   contents: read
 jobs:
   detect:
+    name: shipmate / detect
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-slim
     permissions:
@@ -70,6 +71,7 @@ jobs:
           plan-passphrase: ${{ secrets.SHIPMATE_PLAN_PASSPHRASE }}
 
   summary:
+    name: shipmate / summary
     needs: [detect, plan]
     if: ${{ always() && github.event.pull_request.draft == false }}
     runs-on: ubuntu-slim
