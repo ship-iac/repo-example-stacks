@@ -14,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@8beba594962e1d3df17ff485080e41aa535e32f9 # v0.2.1
+      - uses: ship-iac/shipmate/actions/setup@28d28f7248a9742ec9c03d1f35738fd2f5d84812 # v0.2.2
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - id: m
-        uses: ship-iac/shipmate/actions/build-matrix@8beba594962e1d3df17ff485080e41aa535e32f9 # v0.2.1
+        uses: ship-iac/shipmate/actions/build-matrix@28d28f7248a9742ec9c03d1f35738fd2f5d84812 # v0.2.2
         with:
           base-sha: ""
           all-stacks: "true"
@@ -39,11 +39,11 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@8beba594962e1d3df17ff485080e41aa535e32f9 # v0.2.1
+      - uses: ship-iac/shipmate/actions/setup@28d28f7248a9742ec9c03d1f35738fd2f5d84812 # v0.2.2
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
-      - uses: ship-iac/shipmate/actions/drift-cell@8beba594962e1d3df17ff485080e41aa535e32f9 # v0.2.1
+      - uses: ship-iac/shipmate/actions/drift-cell@28d28f7248a9742ec9c03d1f35738fd2f5d84812 # v0.2.2
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
