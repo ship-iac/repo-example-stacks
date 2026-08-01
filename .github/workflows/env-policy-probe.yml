@@ -1,0 +1,26 @@
+name: env-policy-probe
+# TEMPORARY security probe — delete after the experiment.
+# Question: can a workflow introduced on a feature branch obtain a secret held
+# by an environment whose deployment branch policy is `main` only?
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  # Control: no environment. Proves the secret is not repo-scoped.
+  no-environment:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Report canary length
+        env:
+          CANARY: ${{ secrets.PROBE_CANARY }}
+        run: echo "no-environment job — canary length ${#CANARY} (0 = withheld)"
+
+  # The real probe: names the protected environment from a non-main ref.
+  with-environment:
+    runs-on: ubuntu-slim
+    environment: shipmate-engine
+    steps:
+      - name: Report canary length
+        env:
+          CANARY: ${{ secrets.PROBE_CANARY }}
+        run: echo "with-environment job — canary length ${#CANARY} (0 = withheld)"
