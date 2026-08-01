@@ -1,0 +1,7 @@
+name: probe-caller
+# TEMPORARY security probe — delete after the experiment.
+on: [push]
+jobs:
+  call:
+    uses: ./.github/workflows/probe-callee.yml
+    secrets: inherit
