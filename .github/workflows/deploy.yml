@@ -14,7 +14,7 @@ jobs:
     # Display only: the run's job path reads
     # `shipmate · deploy / post-merge / L<n> / apply / <stack> / <env>`.
     name: post-merge
-    uses: ship-iac/shipmate/.github/workflows/deploy.yml@07c2de1eea9b9576239f9e5a60efb6962e491c7e # v0.2.3
+    uses: ship-iac/shipmate/.github/workflows/deploy.yml@29281dc07aecfdb1962e8fab9cb1e3d2c9046c1e # provisional pin: branch-local commit, not yet on main -- repin with dev/repin_internal.py once this merges
     permissions: { contents: read, checks: read, pull-requests: read, actions: read }
     secrets: inherit
     with:
