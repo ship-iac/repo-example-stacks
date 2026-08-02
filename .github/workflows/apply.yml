@@ -16,7 +16,7 @@ permissions:
 jobs:
   targeted:
     if: ${{ inputs.environment != '' }}
-    uses: ship-iac/shipmate/.github/workflows/apply.yml@07c2de1eea9b9576239f9e5a60efb6962e491c7e # v0.2.3
+    uses: ship-iac/shipmate/.github/workflows/apply.yml@29281dc07aecfdb1962e8fab9cb1e3d2c9046c1e # provisional pin: branch-local commit, not yet on main -- repin with dev/repin_internal.py once this merges
     permissions: { contents: read, checks: read, actions: read }
     secrets: inherit
     with:
@@ -27,7 +27,7 @@ jobs:
       state_suffix: .state
   all:
     if: ${{ inputs.environment == '' }}
-    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@07c2de1eea9b9576239f9e5a60efb6962e491c7e # v0.2.3
+    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@29281dc07aecfdb1962e8fab9cb1e3d2c9046c1e # provisional pin: branch-local commit, not yet on main -- repin with dev/repin_internal.py once this merges
     permissions: { contents: read, checks: read, actions: read }
     secrets: inherit
     with:

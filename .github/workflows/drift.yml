@@ -71,17 +71,19 @@ jobs:
   # the only App key on the drift path.
   issues:
     needs: [detect, drift]
-    if: ${{ always() && github.ref == format('refs/heads/{0}', needs.detect.outputs.default_branch) }}
+    # `detect.outputs.empty == 'false'` replaces the download's
+    # `continue-on-error`. The empty-matrix case (nothing to plan this run)
+    # downloads nothing to match the pattern, and drift-issues returns
+    # silently on an empty cells directory -- indistinguishable from a LOST
+    # artifact, which would then green a drift run that opened no Issue and
+    # closed none. `detect` already tells the two apart, so an empty matrix
+    # skips this job outright and a failed download now fails it.
+    if: ${{ always() && needs.detect.outputs.empty == 'false' && github.ref == format('refs/heads/{0}', needs.detect.outputs.default_branch) }}
     runs-on: ubuntu-slim
     environment: shipmate-engine
     permissions: { actions: read }
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        # continue-on-error: an empty drift matrix (nothing to plan this run)
-        # downloads nothing to match the pattern -- drift-issues degrades to a
-        # clean no-op on an empty cells directory, so a failed/empty download
-        # must not fail this job.
-        continue-on-error: true
         with: { pattern: drift-summary.*, path: drift }
       - uses: ship-iac/shipmate/actions/drift-issues@5ea8fc35053a8550a1dd4a378455761f65b88107 # provisional pin: branch-local commit, not yet on main -- repin with dev/repin_internal.py once this merges
         with:
