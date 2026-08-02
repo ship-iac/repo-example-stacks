@@ -1,0 +1,16 @@
+name: shipmate · summary
+# Runs at the default-branch ref with the engine's own definition, so a branch
+# cannot alter it and it can reach the shipmate-engine environment. The plan
+# workflow it follows holds no secrets at all.
+on:
+  workflow_run:
+    workflows: ["shipmate · plan"]
+    types: [completed]
+permissions: {}
+jobs:
+  summary:
+    uses: ship-iac/shipmate/.github/workflows/summary.yml@d837a6fbd33d4500faa56d8f489dfe92ec454eec # provisional pin: branch-local commit, not yet on main -- repin with dev/repin_internal.py once this merges
+    # A callee's permissions are capped by this job's — the callee needs
+    # pull-requests: read for its pull-request lookup.
+    permissions: { actions: read, contents: read, pull-requests: read }
+    secrets: inherit
