@@ -9,7 +9,7 @@ on:
 permissions: {}
 jobs:
   summary:
-    uses: ship-iac/shipmate/.github/workflows/summary.yml@56f5482bd49134019405b828231cab8cdd52ead8 # provisional pin: branch-local commit, not yet on main -- repin with dev/repin_internal.py once this merges
+    uses: ship-iac/shipmate/.github/workflows/summary.yml@56f5482bd49134019405b828231cab8cdd52ead8 # main 2026-08-02
     # A callee's permissions are capped by this job's — the callee needs
     # pull-requests: read for its pull-request lookup.
     permissions: { actions: read, contents: read, pull-requests: read }
