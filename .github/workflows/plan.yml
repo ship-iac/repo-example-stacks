@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@56f5482bd49134019405b828231cab8cdd52ead8 # v0.2.3
+      - uses: ship-iac/shipmate/actions/setup@56f5482bd49134019405b828231cab8cdd52ead8 # main 2026-08-02
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
@@ -29,7 +29,7 @@ jobs:
       - name: stale codegen check
         run: terramate generate --detailed-exit-code
       - id: matrix
-        uses: ship-iac/shipmate/actions/build-matrix@56f5482bd49134019405b828231cab8cdd52ead8 # v0.2.3
+        uses: ship-iac/shipmate/actions/build-matrix@56f5482bd49134019405b828231cab8cdd52ead8 # main 2026-08-02
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
 
@@ -50,20 +50,20 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - uses: ship-iac/shipmate/actions/setup@56f5482bd49134019405b828231cab8cdd52ead8 # v0.2.3
+      - uses: ship-iac/shipmate/actions/setup@56f5482bd49134019405b828231cab8cdd52ead8 # main 2026-08-02
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - name: stack slug
         id: slug
         run: echo "slug=$(echo '${{ matrix.stack }}' | tr / -)" >> "$GITHUB_OUTPUT"
-      - uses: ship-iac/shipmate/actions/state@56f5482bd49134019405b828231cab8cdd52ead8 # v0.2.3
+      - uses: ship-iac/shipmate/actions/state@56f5482bd49134019405b828231cab8cdd52ead8 # main 2026-08-02
         with:
           stack-slug: ${{ steps.slug.outputs.slug }}
           env: ${{ matrix.environment }}
           mode: restore
           path: ${{ matrix.stack }}/.state
-      - uses: ship-iac/shipmate/actions/plan-cell@56f5482bd49134019405b828231cab8cdd52ead8 # v0.2.3
+      - uses: ship-iac/shipmate/actions/plan-cell@56f5482bd49134019405b828231cab8cdd52ead8 # main 2026-08-02
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
