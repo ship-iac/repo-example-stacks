@@ -7,16 +7,27 @@ permissions:
   contents: read
 jobs:
   detect:
-    # gh workflow run drift.yml --ref <branch> would otherwise run branch code
-    # in a plan environment, which must stay policy-free (no branch
-    # restriction) for planning to work at all -- so a job naming one is
-    # reachable from a feature branch unless guarded here.
-    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    # Resolves the default branch from the API rather than trusting
+    # github.event.repository.default_branch: whether that field is
+    # populated on this workflow's `schedule` trigger is exactly the
+    # question this guard must NOT depend on (see `drift`/`issues` below).
+    # This job itself runs no consumer code and holds no secret, so it is
+    # intentionally left ungated -- a `gh workflow run drift.yml --ref
+    # <branch>` dispatch on a feature branch fails visibly at the two gated
+    # jobs below instead of this job silently doing nothing.
     runs-on: ubuntu-slim
     outputs:
       matrix: ${{ steps.m.outputs.matrix }}
       empty: ${{ steps.m.outputs.empty }}
+      default_branch: ${{ steps.default_branch.outputs.default_branch }}
     steps:
+      - id: default_branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          echo "default_branch=$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
       - uses: ship-iac/shipmate/actions/setup@07c2de1eea9b9576239f9e5a60efb6962e491c7e # v0.2.3
@@ -30,7 +41,7 @@ jobs:
           all-stacks: "true"
   drift:
     needs: detect
-    if: ${{ needs.detect.outputs.empty == 'false' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    if: ${{ needs.detect.outputs.empty == 'false' && github.ref == format('refs/heads/{0}', needs.detect.outputs.default_branch) }}
     runs-on: ubuntu-slim
     permissions: { contents: read }
     strategy:
@@ -60,7 +71,7 @@ jobs:
   # the only App key on the drift path.
   issues:
     needs: [detect, drift]
-    if: ${{ always() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    if: ${{ always() && github.ref == format('refs/heads/{0}', needs.detect.outputs.default_branch) }}
     runs-on: ubuntu-slim
     environment: shipmate-engine
     permissions: { actions: read }
