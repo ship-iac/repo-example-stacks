@@ -1,4 +1,4 @@
-name: shipmate · plan
+name: shipmate · plan EXPERIMENT
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
