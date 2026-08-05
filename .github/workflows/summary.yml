@@ -9,7 +9,7 @@ on:
 permissions: {}
 jobs:
   summary:
-    uses: ship-iac/shipmate/.github/workflows/summary.yml@1efbee8fae48417bee1f634bcd6721289c060027 # v0.3.1
+    uses: ship-iac/shipmate/.github/workflows/summary.yml@a5a823f6e9ce641f43b0ec44d312a46b183294dd # v0.5.0
     # A callee's permissions are capped by this job's — the callee needs
     # pull-requests: read for its pull-request lookup.
     permissions: { actions: read, contents: read, pull-requests: read }
