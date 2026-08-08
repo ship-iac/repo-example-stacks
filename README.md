@@ -69,11 +69,11 @@ Expect `tofu plan` to show 2 resources to add (`random_pet.this`,
 
 ```
 repo-example-stacks/
-├── terramate.tm.hcl          # enables the "scripts" experiment
+├── terramate.tm.hcl          # project root marker
 ├── tools/
 │   └── mutate-state.ps1      # drift fixture helper
 └── stacks/
-    ├── root.tm.hcl           # shared globals + generate_hcl blocks + scripts,
+    ├── root.tm.hcl           # shared globals + generate_hcl blocks,
     │                         # inherited by every stack below it
     ├── dns/                  # env/dev-us
     ├── platform/             # env/dev-eu, after dns
@@ -174,13 +174,13 @@ tofu init -input=false
 tofu plan -input=false
 ```
 
-Terramate also ships two convenience scripts (defined in `stacks/root.tm.hcl`,
-needing the `scripts` experiment already enabled in `terramate.tm.hcl`), run
-from inside a stack directory with the vars still exported:
+shipmate names the commands it runs, so this repository defines no Terramate
+scripts. To reproduce a cell exactly as CI runs it, with the vars still
+exported:
 
 ```bash
-terramate script run plan    # tofu init && tofu plan -out=stack.otplan
-terramate script run apply   # tofu init && tofu apply -auto-approve stack.otplan
+terramate run --no-recursive -C stacks/dns -- tofu init -input=false -reconfigure
+terramate run --no-recursive -C stacks/dns -- tofu plan -input=false -lock=false -out=stack.otplan
 ```
 
 ## Failure fixtures
