@@ -6,10 +6,16 @@ name: pt caller probe
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
-permissions: {}
+permissions:
+  contents: read
 jobs:
   summary:
     if: ${{ !cancelled() }}
+    # A callee's permissions are capped by this job's. Without this grant the
+    # callee's `contents: read` exceeds the cap and the whole run dies at
+    # startup, with no job, no log and no annotation to say why.
+    permissions:
+      contents: read
     uses: ./.github/workflows/pt-callee-probe.yml
     with:
       caller-saw-draft: ${{ github.event.pull_request.draft }}
