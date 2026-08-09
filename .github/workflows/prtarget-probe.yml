@@ -1,0 +1,36 @@
+name: prtarget probe
+# TEMPORARY probe workflow — delete after the experiment.
+# Checks out nothing, runs no repository code, and reads no secret. The question
+# is only whether a `pull_request_target` job binding `environment:
+# shipmate-engine` is ALLOWED to start under that environment's
+# default-branch-only deployment branch policy — a denied policy fails the job
+# before its first step, so the job's own outcome is the answer.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+permissions: {}
+jobs:
+  trusted:
+    runs-on: ubuntu-latest
+    environment: shipmate-engine
+    steps:
+      - name: facts
+        env:
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          DRAFT: ${{ github.event.pull_request.draft }}
+          ACTION: ${{ github.event.action }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          set -u
+          echo "job=trusted"
+          echo "ref=$REF"
+          echo "sha=$SHA"
+          echo "head_sha=$HEAD_SHA"
+          echo "base_sha=$BASE_SHA"
+          echo "draft=$DRAFT"
+          echo "action=$ACTION"
+          echo "head_repo=$HEAD_REPO"
+          echo "environment=shipmate-engine reached"
