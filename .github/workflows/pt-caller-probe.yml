@@ -1,0 +1,15 @@
+name: pt caller probe
+# TEMPORARY probe — delete after the experiment.
+# Stands in for the consumer plan.yml's `summary` job: a pull_request_target
+# workflow whose job calls a reusable workflow. Nothing here is the gate, so a
+# wrong answer costs nothing.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions: {}
+jobs:
+  summary:
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/pt-callee-probe.yml
+    with:
+      caller-saw-draft: ${{ github.event.pull_request.draft }}
