@@ -1,0 +1,45 @@
+name: prtarget probe
+# TEMPORARY probe workflow — delete after the experiment.
+# Checks out nothing and runs no repository code; it only echoes event facts and
+# the LENGTH of a throwaway canary secret.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+permissions: {}
+jobs:
+  trusted:
+    runs-on: ubuntu-latest
+    environment: shipmate-engine
+    steps:
+      - name: facts
+        env:
+          CANARY: ${{ secrets.PRTARGET_CANARY }}
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          DRAFT: ${{ github.event.pull_request.draft }}
+          ACTION: ${{ github.event.action }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          set -u
+          echo "job=trusted"
+          echo "ref=$REF"
+          echo "sha=$SHA"
+          echo "head_sha=$HEAD_SHA"
+          echo "base_sha=$BASE_SHA"
+          echo "draft=$DRAFT"
+          echo "action=$ACTION"
+          echo "head_repo=$HEAD_REPO"
+          echo "canary_len=${#CANARY}"
+
+  untrusted:
+    runs-on: ubuntu-latest
+    steps:
+      - name: facts
+        env:
+          CANARY: ${{ secrets.PRTARGET_CANARY }}
+        run: |
+          set -u
+          echo "job=untrusted"
+          echo "canary_len=${#CANARY}"
