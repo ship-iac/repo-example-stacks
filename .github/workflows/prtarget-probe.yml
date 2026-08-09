@@ -1,7 +1,10 @@
 name: prtarget probe
 # TEMPORARY probe workflow — delete after the experiment.
-# Checks out nothing and runs no repository code; it only echoes event facts and
-# the LENGTH of a throwaway canary secret.
+# Checks out nothing, runs no repository code, and reads no secret. The question
+# is only whether a `pull_request_target` job binding `environment:
+# shipmate-engine` is ALLOWED to start under that environment's
+# default-branch-only deployment branch policy — a denied policy fails the job
+# before its first step, so the job's own outcome is the answer.
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
@@ -13,7 +16,6 @@ jobs:
     steps:
       - name: facts
         env:
-          CANARY: ${{ secrets.PRTARGET_CANARY }}
           REF: ${{ github.ref }}
           SHA: ${{ github.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -31,15 +33,4 @@ jobs:
           echo "draft=$DRAFT"
           echo "action=$ACTION"
           echo "head_repo=$HEAD_REPO"
-          echo "canary_len=${#CANARY}"
-
-  untrusted:
-    runs-on: ubuntu-latest
-    steps:
-      - name: facts
-        env:
-          CANARY: ${{ secrets.PRTARGET_CANARY }}
-        run: |
-          set -u
-          echo "job=untrusted"
-          echo "canary_len=${#CANARY}"
+          echo "environment=shipmate-engine reached"
