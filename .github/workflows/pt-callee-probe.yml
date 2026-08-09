@@ -1,0 +1,43 @@
+name: pt callee probe
+# TEMPORARY probe — delete after the experiment.
+# Mirrors the engine's reusable summary.yml EXACTLY where it matters: a
+# workflow_call callee whose single job binds `environment: shipmate-engine`
+# and whose `if:` reads `github.event.pull_request` from the CALLER's event.
+# Checks out nothing, runs no repository code, reads no secret.
+#
+# The question: does a called workflow's job `if:` see the caller's
+# pull_request_target event at all? If it does not, both clauses evaluate
+# falsy and the real summary job would never run — every gate silently absent.
+on:
+  workflow_call:
+    inputs:
+      caller-saw-draft:
+        required: true
+        type: string
+jobs:
+  trusted:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    environment: shipmate-engine
+    permissions:
+      contents: read
+    steps:
+      - name: facts
+        env:
+          REF: ${{ github.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          DRAFT: ${{ github.event.pull_request.draft }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CALLER_SAW_DRAFT: ${{ inputs.caller-saw-draft }}
+        run: |
+          set -u
+          echo "callee_ran=yes"
+          echo "ref=$REF"
+          echo "head_repo=$HEAD_REPO"
+          echo "draft=$DRAFT"
+          echo "number=$NUMBER"
+          echo "head_sha=$HEAD_SHA"
+          echo "caller_saw_draft=$CALLER_SAW_DRAFT"
