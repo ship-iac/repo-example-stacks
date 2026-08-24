@@ -18,7 +18,7 @@ jobs:
     environment: shipmate-engine
     steps:
       - id: authz
-        uses: ship-iac/shipmate/actions/comment-ops@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+        uses: ship-iac/shipmate/actions/comment-ops@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           app-id: ${{ vars.SHIPMATE_APP_ID }}
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
@@ -32,7 +32,7 @@ jobs:
           # apply paths, so a literal wider than it only buys a refused run.
           ungated-envs: ${{ vars.SHIPMATE_UNGATED_ENVS }}
       - if: ${{ steps.authz.outputs.authorized == 'true' }}
-        uses: ship-iac/shipmate/actions/dispatch@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+        uses: ship-iac/shipmate/actions/dispatch@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           app-id: ${{ vars.SHIPMATE_APP_ID }}
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
