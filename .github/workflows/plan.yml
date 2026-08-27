@@ -26,7 +26,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - uses: ship-iac/shipmate/actions/setup@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+      - uses: ship-iac/shipmate/actions/setup@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
@@ -35,7 +35,7 @@ jobs:
       - name: stale codegen check
         run: terramate generate --detailed-exit-code
       - id: matrix
-        uses: ship-iac/shipmate/actions/build-matrix@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+        uses: ship-iac/shipmate/actions/build-matrix@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
 
@@ -58,20 +58,20 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - uses: ship-iac/shipmate/actions/setup@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+      - uses: ship-iac/shipmate/actions/setup@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           terramate-version: ${{ vars.TERRAMATE_VERSION }}
           tofu-version: ${{ vars.TOFU_VERSION }}
       - name: stack slug
         id: slug
         run: echo "slug=$(echo '${{ matrix.stack }}' | tr / -)" >> "$GITHUB_OUTPUT"
-      - uses: ship-iac/shipmate/actions/state@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+      - uses: ship-iac/shipmate/actions/state@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           stack-slug: ${{ steps.slug.outputs.slug }}
           env: ${{ matrix.environment }}
           mode: restore
           path: ${{ matrix.stack }}/.state
-      - uses: ship-iac/shipmate/actions/plan-cell@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+      - uses: ship-iac/shipmate/actions/plan-cell@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
         with:
           stack: ${{ matrix.stack }}
           stack-name: ${{ matrix.stack }}
@@ -87,7 +87,7 @@ jobs:
   summary:
     needs: [detect, plan]
     if: ${{ !cancelled() }}
-    uses: ship-iac/shipmate/.github/workflows/summary.yml@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+    uses: ship-iac/shipmate/.github/workflows/summary.yml@468429a10e0c59ecd8092c8ff990286cf5a4584e # v0.18.0
     permissions:
       contents: read
     secrets:
