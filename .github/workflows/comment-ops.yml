@@ -18,7 +18,7 @@ jobs:
     environment: shipmate-engine
     steps:
       - id: authz
-        uses: ship-iac/shipmate/actions/comment-ops@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+        uses: ship-iac/shipmate/actions/comment-ops@dbcc4c5e82bbb37a2e6027b1c9ecc3f62eafc65e # v0.20.0
         with:
           app-id: ${{ vars.SHIPMATE_APP_ID }}
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
@@ -32,13 +32,12 @@ jobs:
           # apply paths, so a literal wider than it only buys a refused run.
           ungated-envs: ${{ vars.SHIPMATE_UNGATED_ENVS }}
       - if: ${{ steps.authz.outputs.authorized == 'true' }}
-        uses: ship-iac/shipmate/actions/dispatch@5f4a022cfbcee0fcc25960a7152997a2fdeeb1ff # v0.17.0
+        uses: ship-iac/shipmate/actions/dispatch@dbcc4c5e82bbb37a2e6027b1c9ecc3f62eafc65e # v0.20.0
         with:
           app-id: ${{ vars.SHIPMATE_APP_ID }}
           private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
           environment: ${{ steps.authz.outputs.environment }}
           ref: ${{ steps.authz.outputs.head-sha }}
           pr-number: ${{ github.event.issue.number }}
-          plan-run-id: ${{ steps.authz.outputs.plan-run-id }}
           dispatch-ref: ${{ github.event.repository.default_branch }}
           repository: ${{ github.repository }}
