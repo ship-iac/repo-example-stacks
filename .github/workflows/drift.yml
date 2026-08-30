@@ -2,6 +2,7 @@ name: shipmate · drift
 on:
   schedule:
     - cron: "17 3 * * *"   # nightly, off-peak
+    - cron: "5,20,35,50 17 * * *"
   workflow_dispatch: {}     # manual trigger for acceptance
 permissions:
   contents: read
@@ -21,6 +22,13 @@ jobs:
       empty: ${{ steps.m.outputs.empty }}
       default_branch: ${{ steps.default_branch.outputs.default_branch }}
     steps:
+      - id: probe
+        shell: bash
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          echo "event=$EVENT schedule=[$SCHEDULE]"
       - id: default_branch
         shell: bash
         env:
