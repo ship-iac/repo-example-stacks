@@ -6,8 +6,14 @@ on:
         description: Target environment (empty = bare `shipmate apply`, all non-explicit environments)
         required: false
         default: ''
-      ref: { description: PR head SHA to apply, required: true }
-      pr_number: { description: PR number, required: true }
+      ref:
+        description: PR head SHA to apply
+        required: false
+        default: ''
+      pr_number:
+        description: PR number
+        required: false
+        default: ''
 permissions:
   contents: read
   actions: read
