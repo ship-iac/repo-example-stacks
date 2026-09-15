@@ -1,0 +1,16 @@
+# Dynamic backend: the layout derives `TF_VAR_env` from each environment's own name
+# and `TF_VAR_region` from its `region`. Under `dry` every environment in the matrix
+# needs an entry with a non-empty region, or the run refuses at detect.
+layout = "dry"
+
+[env_order]
+dev-us = ["dev-eu"]
+
+[environments.dev-eu]
+region = "eu-west-1"
+
+[environments.dev-us]
+region = "us-east-1"
+
+[environments.sbx]
+region = "eu-west-1"
