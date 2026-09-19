@@ -18,14 +18,22 @@ against the folder-per-env and workspace-per-env layouts.)
 
 ## What this repo tests
 
-The engine ships three workflows (pinned by commit SHA in
-`.github/workflows/`):
+The engine ships three workflows (referenced in `.github/workflows/`):
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | `plan.yml` | pull request | fan out one plan per stack × env, publish plan artifacts, create a pending apply check per cell, gate on `shipmate / gate` |
 | `deploy.yml` | push to `main` | apply the reviewed plans in **waves** (topological levels of the `after` DAG) |
 | `drift.yml` | schedule | plan every stack × env and open/update/close a drift issue |
+
+The engine's reusable workflows are referenced at `@main`: every run here
+(plan, deploy, drift, comment-driven apply and unlock) executes the engine's
+current default branch, so this sample has no engine pin to bump. Expect
+`shipmate doctor` to annotate every run with one WARNING per `uses:` line
+saying the ref is a branch, and a plan comment on every pull request because
+of it. The warning is for consumers holding deploy credentials; this sample
+has no cloud credentials. `repo-example-stacks-aws` is the release-pinned
+sample.
 
 The stacks, tags, and DAG below are the fixture those workflows run against.
 
