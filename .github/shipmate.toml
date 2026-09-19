@@ -3,6 +3,13 @@
 # needs an entry with a non-empty region, or the run refuses at detect.
 layout = "dry"
 
+# Who may drive shipmate by pull-request comment, and which environments a targeted
+# apply may reach without an approving review. Every repository declares its own team:
+# the engine reads this file and no repository variable.
+[gate]
+approvers_team = "deployers"
+ungated_envs = ["dev-eu"]
+
 [env_order]
 dev-us = ["dev-eu"]
 
