@@ -1,5 +1,5 @@
 globals {
-  version = "17"
+  version = "18"
 }
 
 generate_hcl "_backend.tf" {
