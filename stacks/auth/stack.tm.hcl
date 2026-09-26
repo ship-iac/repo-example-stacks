@@ -5,3 +5,4 @@ stack {
   after       = ["/stacks/platform"]
   id          = "76082390-6320-4f48-9197-6452cd27eb3a"
 }
+# c10 acceptance probe
