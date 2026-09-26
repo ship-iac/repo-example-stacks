@@ -1,23 +1,24 @@
+schema_version = 1
+
 # Dynamic backend: the layout derives `TF_VAR_env` from each environment's own name
-# and `TF_VAR_region` from its `region`. Under `dry` every environment in the matrix
+# and `TF_VAR_region` from its `region`. Under `tf_vars` every environment in the matrix
 # needs an entry with a non-empty region, or the run refuses at detect.
-layout = "dry"
+layout = "tf_vars"
 
-# Who may drive shipmate by pull-request comment, and which environments a targeted
-# apply may reach without an approving review. Every repository declares its own team:
-# the engine reads this file and no repository variable.
+# Who may drive shipmate by pull-request comment. Every repository declares its own
+# team: the engine reads this file and no repository variable.
 [gate]
-approvers_team = "deployers"
-ungated_envs = ["dev-eu"]
+approver_team = "deployers"
 
-[env_order]
-dev-us = ["dev-eu"]
-
+# A targeted apply to dev-eu needs no approving review.
 [environments.dev-eu]
 region = "eu-west-1"
+gated = false
 
+# dev-eu fully applies first.
 [environments.dev-us]
 region = "us-east-1"
+needs = ["dev-eu"]
 
 [environments.sbx]
 region = "eu-west-1"
