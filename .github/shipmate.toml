@@ -10,15 +10,29 @@ layout = "tf_vars"
 [gate]
 approver_team = "deployers"
 
+# Never merged: a doctor smoke for identities. The ARNs are placeholders.
+[identities.dev]
+aws.account = "111111111111"
+aws.plan    = "shipmate-plan-{workload}"
+aws.apply   = "shipmate-apply-{workload}"
+
+[identities.sbx]
+aws.apply = "arn:aws:iam::222222222222:role/sbx-apply"
+
 # A targeted apply to dev-eu needs no approving review.
 [environments.dev-eu]
 region = "eu-west-1"
 gated = false
+identity = "dev"
+workloads = ["net", "app"]
 
 # dev-eu fully applies first.
 [environments.dev-us]
 region = "us-east-1"
 needs = ["dev-eu"]
+identity = "dev"
+workloads = ["net"]
 
 [environments.sbx]
 region = "eu-west-1"
+identity = "sbx"
