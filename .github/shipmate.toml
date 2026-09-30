@@ -5,11 +5,6 @@ schema_version = 1
 # needs an entry with a non-empty region, or the run refuses at detect.
 layout = "tf_vars"
 
-# Who may drive shipmate by pull-request comment. Every repository declares its own
-# team: the engine reads this file and no repository variable.
-[gate]
-approver_team = "deployers"
-
 # A targeted apply to dev-eu needs no approving review.
 [environments.dev-eu]
 region = "eu-west-1"
