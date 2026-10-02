@@ -114,8 +114,6 @@ jobs:
       SHIPMATE_SLACK_WEBHOOK: ${{ secrets.SHIPMATE_SLACK_WEBHOOK }}
     with:
       runs_on: ubuntu-slim
-      # Empty covers every cell. Split the sweep by adding more files, one tag query each.
-      tags: ""
   targeted:
     if: github.event_name == 'workflow_dispatch' && inputs.verb == 'apply' && inputs.environment != ''
     uses: ship-iac/shipmate/.github/workflows/apply.yml@main
