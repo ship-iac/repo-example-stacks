@@ -48,7 +48,7 @@ jobs:
     name: shipmate
     # `github.event.inputs` is the form readable under either trigger, unlike the `inputs`
     # context, and `plan` and `drift` also run under one that is not `workflow_dispatch`; the
-    # concurrency group below relies on the same thing. `targeted`, `all` and `unlock` are
+    # concurrency group below relies on the same thing. `apply` and `unlock` are
     # dispatch-only and keep `inputs.`, because only that form applies a declared default,
     # which is what makes an omitted `environment` key read as the empty string.
     if: github.event_name == 'pull_request_target' || (github.event_name == 'workflow_dispatch' && github.event.inputs.verb == 'plan')
@@ -114,8 +114,8 @@ jobs:
       SHIPMATE_SLACK_WEBHOOK: ${{ secrets.SHIPMATE_SLACK_WEBHOOK }}
     with:
       runs_on: ubuntu-slim
-  targeted:
-    if: github.event_name == 'workflow_dispatch' && inputs.verb == 'apply' && inputs.environment != ''
+  apply:
+    if: github.event_name == 'workflow_dispatch' && inputs.verb == 'apply'
     uses: ship-iac/shipmate/.github/workflows/apply.yml@main
     permissions: { contents: read, checks: read, actions: read, id-token: write }
     secrets:
@@ -124,17 +124,6 @@ jobs:
       SHIPMATE_SECRETS: ${{ secrets.SHIPMATE_SECRETS }}
     with:
       environment: ${{ inputs.environment }}
-      ref: ${{ inputs.ref }}
-      pr_number: ${{ inputs.pr_number }}
-  all:
-    if: github.event_name == 'workflow_dispatch' && inputs.verb == 'apply' && inputs.environment == ''
-    uses: ship-iac/shipmate/.github/workflows/apply-all.yml@main
-    permissions: { contents: read, checks: read, actions: read, id-token: write }
-    secrets:
-      SHIPMATE_APP_PRIVATE_KEY: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
-      SHIPMATE_PLAN_PASSPHRASE: ${{ secrets.SHIPMATE_PLAN_PASSPHRASE }}
-      SHIPMATE_SECRETS: ${{ secrets.SHIPMATE_SECRETS }}
-    with:
       ref: ${{ inputs.ref }}
       pr_number: ${{ inputs.pr_number }}
   unlock:
