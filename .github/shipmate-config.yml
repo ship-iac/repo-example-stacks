@@ -1,0 +1,18 @@
+# Dynamic backend: the layout derives `TF_VAR_env` from each environment's own name
+# and `TF_VAR_region` from its `region`. Under `tf_vars` every environment in the matrix
+# needs an entry with a non-empty region, or the run refuses at detect.
+layout: tf_vars
+
+environments:
+  # A targeted apply to dev-eu needs no approving review.
+  dev-eu:
+    region: eu-west-1
+    gated: false
+
+  # dev-eu fully applies first.
+  dev-us:
+    region: us-east-1
+    needs: [dev-eu]
+
+  sbx:
+    region: eu-west-1
