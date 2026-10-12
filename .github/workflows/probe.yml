@@ -1,0 +1,16 @@
+name: probe
+on: pull_request
+permissions: {}
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: r
+        with:
+          path: stacks/app/.state/dev-eu/eu-west-1/terraform.tfstate
+          key: state/stacks-app/dev-eu/none
+          restore-keys: state/stacks-app/dev-eu/
+      - run: |
+          echo "matched=${{ steps.r.outputs.cache-matched-key }}"
+          head -c 16 stacks/app/.state/dev-eu/eu-west-1/terraform.tfstate | od -c
