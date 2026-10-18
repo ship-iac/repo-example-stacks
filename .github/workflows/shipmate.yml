@@ -65,7 +65,7 @@ jobs:
       SHIPMATE_PLAN_PASSPHRASE: ${{ secrets.SHIPMATE_PLAN_PASSPHRASE }}
       SHIPMATE_SECRETS: ${{ secrets.SHIPMATE_SECRETS }}
     with:
-      runs_on: ubuntu-slim
+      runs_on: ubuntu-26.04-arm
   comment-ops:
     name: shipmate
     # `issue_comment` fires on issues too; the engine's own `ops` job carries that filter, so
