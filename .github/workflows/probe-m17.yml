@@ -1,0 +1,48 @@
+name: probe-m17
+on: pull_request
+permissions: {}
+jobs:
+  detect:
+    runs-on: ubuntu-slim
+    outputs:
+      empty: "true"
+      matrix: ""
+      one: '{"include":[{"stack":"x","environment":"y"}]}'
+    steps:
+      - run: echo ok
+  a1:
+    needs: detect
+    if: needs.detect.outputs.empty == 'false'
+    runs-on: ubuntu-slim
+    strategy:
+      matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    name: ${{ matrix.stack }} / ${{ matrix.environment }}
+    steps:
+      - run: echo a1
+  a2:
+    needs: detect
+    if: needs.detect.outputs.empty == 'false'
+    runs-on: ubuntu-slim
+    strategy:
+      matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    name: ${{ matrix.stack || 'nothing planned' }}
+    steps:
+      - run: echo a2
+  a3:
+    needs: detect
+    if: needs.detect.outputs.empty == 'false'
+    runs-on: ubuntu-slim
+    strategy:
+      matrix: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    name: ${{ needs.detect.outputs.empty == 'true' && 'nothing planned' || format('{0} / {1}', matrix.stack, matrix.environment) }}
+    steps:
+      - run: echo a3
+  a4:
+    needs: detect
+    if: needs.detect.outputs.empty == 'false'
+    runs-on: ubuntu-slim
+    strategy:
+      matrix: ${{ fromJSON(needs.detect.outputs.one) }}
+    name: ${{ matrix.stack }} / ${{ matrix.environment }}
+    steps:
+      - run: echo a4
