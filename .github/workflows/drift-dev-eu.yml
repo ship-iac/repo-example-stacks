@@ -6,7 +6,7 @@ on:
 permissions: {}
 jobs:
   drift:
-    name: shipmate
+    name: sweep
     uses: ship-iac/shipmate/.github/workflows/drift.yml@main
     permissions:
       contents: read
@@ -15,7 +15,7 @@ jobs:
     secrets:
       SHIPMATE_APP_PRIVATE_KEY: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
       SHIPMATE_SECRETS: ${{ secrets.SHIPMATE_SECRETS }}
-      SHIPMATE_PLAN_PASSPHRASE: ${{ secrets.SHIPMATE_PLAN_PASSPHRASE }}
+      SHIPMATE_ENCRYPTION_KEY: ${{ secrets.SHIPMATE_ENCRYPTION_KEY }}
     with:
       runs_on: ubuntu-26.04-arm
       tags: env/dev-eu
