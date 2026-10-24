@@ -7,7 +7,7 @@ environments:
   # A targeted apply to dev-eu needs no approving review.
   dev-eu:
     region: eu-west-1
-    gated: false
+    review: false
 
   dev-us:
     region: us-east-1
