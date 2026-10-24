@@ -1,0 +1,12 @@
+name: probe-lock-read
+on: pull_request
+permissions: { contents: read }
+jobs:
+  read:
+    runs-on: ubuntu-slim
+    steps:
+      - env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          gh api repos/${{ github.repository }}/git/matching-refs/shipmate/locks/probe/ -i | head -30
+          sha=$(gh api repos/${{ github.repository }}/git/matching-refs/shipmate/locks/probe/ -q '.[0].object.sha')
+          gh api repos/${{ github.repository }}/git/commits/$sha -q '{m:.message,c:.committer.date}'
