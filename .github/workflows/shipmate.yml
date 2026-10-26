@@ -15,23 +15,23 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
-      # Only verb is required: one schema serves three verbs, and GitHub answers 422 to an
+      # Only verb is required: one schema serves four verbs, and GitHub answers 422 to an
       # empty required input. The engine refuses a plan with no number, an apply with no ref.
       verb:
-        description: What to run (plan, apply or unlock)
+        description: What to run (plan, apply, unlock or auto)
         type: choice
-        options: [plan, apply, unlock]
+        options: [plan, apply, unlock, auto]
         required: true
       environment:
         description: "Target environment (apply and unlock; empty apply = every environment without apply_mode: targeted)"
         required: false
         default: ''
       ref:
-        description: PR head SHA (apply and unlock)
+        description: PR head SHA (apply, unlock and auto)
         required: false
         default: ''
       pr_number:
-        description: Pull request number (plan and apply)
+        description: Pull request number (plan, apply and auto)
         required: false
         default: ''
 # Deny by default: each job grants its own permissions, so a job that loses its block gets none.
@@ -108,10 +108,22 @@ jobs:
   apply:
     if: github.event_name == 'workflow_dispatch' && inputs.verb == 'apply'
     uses: ship-iac/shipmate/.github/workflows/apply.yml@main
-    permissions: { contents: read, checks: read, actions: read, id-token: write }
+    permissions: { contents: read, checks: read, pull-requests: read, actions: read, id-token: write }
     secrets: *engine-secrets
     with:
       environment: ${{ inputs.environment }}
+      ref: ${{ inputs.ref }}
+      pr_number: ${{ inputs.pr_number }}
+      runs_on: *runner
+  # Dispatched by the autoplan when its plan covers an `apply_mode: auto` environment;
+  # no comment selects it.
+  auto:
+    if: github.event_name == 'workflow_dispatch' && inputs.verb == 'auto'
+    uses: ship-iac/shipmate/.github/workflows/apply.yml@main
+    permissions: { contents: read, checks: read, pull-requests: read, actions: read, id-token: write }
+    secrets: *engine-secrets
+    with:
+      auto: true
       ref: ${{ inputs.ref }}
       pr_number: ${{ inputs.pr_number }}
       runs_on: *runner
