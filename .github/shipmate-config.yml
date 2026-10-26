@@ -12,7 +12,9 @@ environments:
   dev-us:
     region: us-east-1
 
-  # dev-eu fully applies first.
+  # dev-eu fully applies first. A green autoplan applies sbx with no comment.
   sbx:
     region: eu-west-1
     needs: [dev-eu]
+    apply_mode: auto
+    review: false
