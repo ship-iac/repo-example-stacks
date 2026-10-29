@@ -1,6 +1,6 @@
 stack {
   name        = "dns"
-  description = "dns (prd2-5b, workload tag inert without an identity)"
+  description = "dns (prd2-5b, workload tag inert without an identity; G6 probe P)"
   tags        = ["env/dev-us", "workload/net"]
   id          = "b1c3f7c2-8b31-4140-862d-1a77890630e5"
 }
