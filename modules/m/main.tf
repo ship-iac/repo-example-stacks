@@ -1,6 +1,6 @@
 variable "v" {
   type    = string
-  default = "1"
+  default = "2"
 }
 
 output "o" {
