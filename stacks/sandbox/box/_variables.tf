@@ -7,7 +7,7 @@ variable "region" {
   type = string
 }
 variable "app_version" {
-  default = "35"
+  default = "36"
   type    = string
 }
 variable "fail_precondition" {
