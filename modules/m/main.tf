@@ -6,3 +6,7 @@ variable "v" {
 output "o" {
   value = var.v
 }
+
+resource "terraform_data" "m" {
+  input = var.v
+}
