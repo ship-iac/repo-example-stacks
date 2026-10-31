@@ -18,8 +18,3 @@ environments:
     needs: [dev-eu]
     apply_mode: auto
     review: false
-
-# Probe: consumer-chosen tool versions (removed after the probe).
-tools:
-  tofu: 1.13.2
-  terramate: 0.17.3
