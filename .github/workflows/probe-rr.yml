@@ -19,6 +19,24 @@ jobs:
     environment: probe-rr-apply
     steps:
       - run: echo "attempt=$GITHUB_RUN_ATTEMPT triggering=$GITHUB_TRIGGERING_ACTOR ref=$GITHUB_REF"; sleep 30
+  router:
+    if: github.event_name == 'pull_request_target' && github.run_attempt > 1
+    runs-on: ubuntu-latest
+    outputs:
+      m: ${{ steps.r.outputs.m }}
+    steps:
+      - id: r
+        env: { M: "${{ vars.PROBE_RR_MATRIX }}" }
+        run: echo "m=$M" >> "$GITHUB_OUTPUT"
+  cell:
+    needs: router
+    runs-on: ubuntu-latest
+    name: apply / ${{ matrix.env }}
+    strategy:
+      matrix:
+        env: ${{ fromJSON(needs.router.outputs.m) }}
+    steps:
+      - run: echo "cell=${{ matrix.env }} attempt=$GITHUB_RUN_ATTEMPT"; sleep 20
   driver:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
