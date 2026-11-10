@@ -1,0 +1,40 @@
+name: probe-rr
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      mode: { required: true }
+      target: { required: true }
+permissions: { contents: read }
+jobs:
+  plan:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "attempt=$GITHUB_RUN_ATTEMPT actor=$GITHUB_ACTOR triggering=$GITHUB_TRIGGERING_ACTOR ref=$GITHUB_REF sha=$GITHUB_SHA"
+  apply:
+    if: github.event_name == 'pull_request_target' && github.run_attempt > 1
+    runs-on: ubuntu-latest
+    environment: probe-rr-apply
+    steps:
+      - run: echo "attempt=$GITHUB_RUN_ATTEMPT triggering=$GITHUB_TRIGGERING_ACTOR ref=$GITHUB_REF"; sleep 30
+  driver:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: { name: shipmate-engine, deployment: false }
+    steps:
+      - id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: 4326562
+          private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
+      - env: { GH_TOKEN: "${{ steps.token.outputs.token }}", MODE: "${{ inputs.mode }}", T: "${{ inputs.target }}" }
+        run: |
+          a=repos/${GITHUB_REPOSITORY}
+          case "$MODE" in
+            rerun-job) gh api -X POST $a/actions/jobs/$T/rerun -i | head -1 || true ;;
+            rerun-failed) gh api -X POST $a/actions/runs/$T/rerun-failed-jobs -i | head -1 || true ;;
+            rerun) gh api -X POST $a/actions/runs/$T/rerun -i | head -1 || true ;;
+            label) gh api -X POST $a/issues/$T/labels -f 'labels[]=probe-rr-new' --jq '[.[].name]'; sleep 3; gh api -X DELETE $a/issues/$T/labels/probe-rr-new --jq '[.[].name]'; gh api $a/labels/probe-rr-new --jq '.name+" exists"' || true ;;
+          esac
