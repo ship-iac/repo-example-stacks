@@ -1,0 +1,7 @@
+name: probe-rr2-called
+on: workflow_call
+jobs:
+  called:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "called=v1"
