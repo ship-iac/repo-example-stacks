@@ -16,7 +16,7 @@ jobs:
     if: github.event_name == 'pull_request_target' && github.run_attempt > 1
     runs-on: ubuntu-latest
     steps:
-      - run: echo "fence=v1 attempt=$GITHUB_RUN_ATTEMPT"
+      - run: echo "fence=v2 attempt=$GITHUB_RUN_ATTEMPT"
   remote:
     needs: router
     uses: ship-iac/repo-example-stacks/.github/workflows/probe-rr2-called.yml@main

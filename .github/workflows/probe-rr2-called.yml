@@ -4,4 +4,4 @@ jobs:
   called:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "called=v1"
+      - run: echo "called=v2"
