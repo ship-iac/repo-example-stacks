@@ -1,0 +1,26 @@
+name: probe-g1-label
+on:
+  pull_request_target:
+    types: [labeled]
+permissions: { contents: read }
+jobs:
+  info:
+    if: github.event.label.name == 'probe-g1'
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          SENDER: ${{ github.event.sender.login }}
+          SENDER_TYPE: ${{ github.event.sender.type }}
+        run: echo "ref=$REF sha=$SHA head=$HEAD sender=$SENDER type=$SENDER_TYPE"
+  cell-approve:
+    needs: [info]
+    runs-on: ubuntu-latest
+    environment: probe-g1-label
+    steps: [{ run: "sleep 30; echo '::error::probe cell failed'; exit 1" }]
+  cell-plain:
+    needs: [info]
+    runs-on: ubuntu-latest
+    steps: [{ run: "sleep 40" }]
