@@ -1,0 +1,66 @@
+name: probe-m26-task0
+on:
+  workflow_dispatch:
+    inputs:
+      arm: { required: true, type: choice, options: [settled, rate, cancel] }
+      sha: { required: false, default: "" }
+permissions: { contents: read }
+jobs:
+  writes:
+    if: inputs.arm == 'settled' || inputs.arm == 'rate'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: { name: shipmate-engine, deployment: false }
+    steps:
+      - id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: 4326562
+          private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
+      - env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          SHA: ${{ inputs.sha }}
+          ARM: ${{ inputs.arm }}
+        run: |
+          set -u
+          r=repos/$GITHUB_REPOSITORY/check-runs
+          run_url=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+          q='{status,conclusion,title:.output.title,summary:.output.summary,text:.output.text,external_id,details_url}'
+          # Two consecutive GETs 3 s apart that agree, after at least 3 s.
+          settle() { prev=""; for n in $(seq 1 15); do sleep 3; cur=$(gh api "$r/$1" --jq "$q" 2>&1); if [ "$cur" = "$prev" ]; then echo "settled ($n reads): $cur"; return; fi; prev=$cur; done; echo "UNSETTLED: $cur"; }
+          w() { local id=$1; shift; gh api -X PATCH "$r/$id" "$@" --jq .status >/dev/null 2>&1 || echo "PATCH $* refused"; }
+          new() { gh api -X POST $r -f name="probe-m26 / $1" -f head_sha="$SHA" -f status="$2" -f external_id=ext-1 -f details_url=https://example.com/created -f 'output[title]=T0' -f 'output[summary]=S0' -f 'output[text]=X0' --jq .id; }
+          if [ "$ARM" = settled ]; then
+            id=$(new settled queued); echo "== T1 created"; settle $id
+            w $id -f status=in_progress; echo "== T2 status-only in_progress"; settle $id
+            w $id -f details_url="$run_url"; echo "== T3 details_url only"; settle $id
+            w $id -f status=queued -f 'output[title]=Failed: boom' -f 'output[summary]=S0 kept'; echo "== T4 in_progress to queued with output"; settle $id
+            w $id -f status=in_progress; echo "== T4b queued to in_progress, status-only"; settle $id
+            w $id -f status=completed -f conclusion=success; echo "== T5 completed success"; settle $id
+            w $id -f status=in_progress; echo "== T6 status-only in_progress on completed"; settle $id
+            w $id -f status=queued; echo "== T6b status-only queued on completed"; settle $id
+            w $id -f status=in_progress -f details_url=https://example.com/late; echo "== T6c status-only in_progress plus details_url on completed"; settle $id
+            w $id -f status=in_progress -f 'output[title]=late' -f 'output[summary]=late'; echo "== T7 in_progress plus output on completed"; settle $id
+            echo "== R1 race: complete then immediate status-only in_progress, 10 checks"
+            for i in $(seq 1 10); do c=$(new race-success-$i queued); w $c -f status=completed -f conclusion=success; w $c -f status=in_progress; echo "race-success-$i $(settle $c)"; done
+            echo "== R2 race: queued Failed: then immediate status-only in_progress, 5 checks"
+            for i in $(seq 1 5); do c=$(new race-failed-$i in_progress); w $c -f status=queued -f 'output[title]=Failed: x' -f 'output[summary]=S0'; w $c -f status=in_progress; echo "race-failed-$i $(settle $c)"; done
+          else
+            id=$(new rate queued); s=queued; start=$(date +%s); n=0
+            while [ $n -lt 256 ]; do
+              s=$([ $s = queued ] && echo in_progress || echo queued); n=$((n+1))
+              out=$(gh api -i -X PATCH "$r/$id" -f status=$s 2>&1); first=$(printf '%s\n' "$out" | head -1)
+              case "$first" in *" 200 "*) ;; *) echo "== first non-200 at write $n after $(( $(date +%s) - start )) s"; printf '%s\n' "$out"; break ;; esac
+            done
+            echo "== $n writes in $(( $(date +%s) - start )) s"
+            if [ $n -lt 256 ] || ! printf '%s' "$first" | grep -q " 200 "; then
+              t0=$(date +%s)
+              for k in $(seq 1 20); do sleep 30; f=$(gh api -i -X PATCH "$r/$id" -f status=queued 2>&1 | head -1); echo "recovery +$(( $(date +%s) - t0 )) s: $f"; case "$f" in *" 200 "*) break ;; esac; done
+            fi
+            gh api -i rate_limit | grep -i '^x-ratelimit' || true
+            w $id -f status=completed -f conclusion=neutral
+          fi
+  cancel:
+    if: inputs.arm == 'cancel'
+    uses: ./.github/workflows/probe-m26-task0-callee.yml
+    secrets: inherit
