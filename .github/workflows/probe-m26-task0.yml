@@ -23,11 +23,13 @@ jobs:
           set -u
           r=repos/$GITHUB_REPOSITORY/check-runs
           run_url=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
-          show() { gh api "$r/$1" --jq '{status,conclusion,title:.output.title,summary:.output.summary,text:.output.text,external_id,details_url}'; }
-          patch() { gh api -X PATCH "$r/$id" "$@" --jq .status || echo "PATCH failed"; }
+          q='{status,conclusion,title:.output.title,summary:.output.summary,text:.output.text,external_id,details_url}'
+          show() { for n in 1 2 3 4 5 6; do if out=$(gh api "$r/$1" --jq "$q" 2>&1); then echo "GET (attempt $n): $out"; return; fi; echo "GET attempt $n: $out"; sleep 2; done; }
+          patch() { echo "PATCH response: $(gh api -X PATCH "$r/$id" "$@" --jq "$q" 2>&1)"; }
           id=$(gh api -X POST $r -f name='probe-m26 / task0' -f head_sha="$SHA" -f status=queued -f external_id=ext-1 \
             -f details_url=https://example.com/created -f 'output[title]=T0' -f 'output[summary]=S0' -f 'output[text]=X0' --jq .id)
           echo "== T1 created $id"; show $id
+          echo "== T1b App token GET of the earlier probe check"; show 131483244739
           patch -f status=in_progress; echo "== T2 status-only in_progress"; show $id
           patch -f details_url="$run_url"; echo "== T3 details_url only"; show $id
           patch -f status=queued -f 'output[title]=Failed: boom' -f 'output[summary]=S0 kept'; echo "== T4 in_progress to queued with output"; show $id
@@ -51,7 +53,7 @@ jobs:
       - run: echo snapshot
   wave0:
     needs: [snapshot]
-    if: ${{ !failure() && !cancelled() }}
+    if: ${{ !failure() && !cancelled() && inputs.arm == 'cancel' }}
     runs-on: ubuntu-latest
     steps:
       - run: sleep 600
