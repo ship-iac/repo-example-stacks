@@ -56,3 +56,19 @@ jobs:
             -d '{"content":"rocket"}')
           echo "reaction status: $code"
       - run: echo "event=${{ github.event_name }}"
+  probe-pr:
+    runs-on: ubuntu-slim
+    permissions: { pull-requests: write }
+    steps:
+      - name: React as the job token (unlock only)
+        if: github.event_name == 'workflow_dispatch' && inputs.verb == 'unlock' && inputs.comment_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMENT_ID: ${{ inputs.comment_id }}
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID/reactions" \
+            -d '{"content":"rocket"}')
+          echo "reaction status: $code"
+      - run: echo "event=${{ github.event_name }}"
