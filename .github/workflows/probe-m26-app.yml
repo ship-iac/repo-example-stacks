@@ -1,0 +1,67 @@
+name: probe-m26-app
+on:
+  workflow_dispatch:
+    inputs:
+      arm: { required: true, type: choice, options: [rate, claim] }
+      sha: { required: false, default: "" }
+      comment: { required: false, default: "" }
+      at: { required: false, default: "" }
+permissions: { contents: read }
+jobs:
+  rate:
+    if: inputs.arm == 'rate'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: { name: shipmate-engine, deployment: false }
+    strategy: { fail-fast: false, matrix: { w: [1, 2, 3, 4] } }
+    steps:
+      - id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: 4326562
+          private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
+      - env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          SHA: ${{ inputs.sha }}
+          W: ${{ matrix.w }}
+        run: |
+          set -u
+          r=repos/$GITHUB_REPOSITORY
+          id=$(gh api -X POST $r/check-runs -f name="probe-m26 / rate-$W" -f head_sha="$SHA" -f status=queued --jq .id)
+          sleep 5
+          s=queued; n=0; start=$(date +%s); first=""
+          while [ $n -lt 128 ]; do
+            s=$([ $s = queued ] && echo in_progress || echo queued); n=$((n+1))
+            out=$(gh api -i -X PATCH "$r/check-runs/$id" -f status=$s 2>&1); first=$(printf '%s\n' "$out" | head -1)
+            case "$first" in *" 200 "*) ;; *) echo "== worker $W first non-200 at write $n after $(( $(date +%s) - start )) s"; printf '%s\n' "$out"; break ;; esac
+          done
+          echo "== worker $W: $n writes in $(( $(date +%s) - start )) s, last: $first"
+          echo "== worker $W gate-like status write"
+          gh api -i -X POST "$r/statuses/$SHA" -f state=success -f context="probe-m26 / gate-$W" -f description=probe 2>&1 | head -1
+          case "$first" in *" 200 "*) ;; *)
+            t0=$(date +%s)
+            for k in $(seq 1 20); do sleep 30; f=$(gh api -i -X PATCH "$r/check-runs/$id" -f status=queued 2>&1 | head -1); echo "recovery +$(( $(date +%s) - t0 )) s: $f"; case "$f" in *" 200 "*) break ;; esac; done ;;
+          esac
+          gh api -X PATCH "$r/check-runs/$id" -f status=completed -f conclusion=neutral --jq .status || true
+  claim:
+    if: inputs.arm == 'claim'
+    runs-on: ubuntu-latest
+    environment: { name: shipmate-engine, deployment: false }
+    strategy: { fail-fast: false, matrix: { w: [1, 2, 3, 4, 5] } }
+    steps:
+      - id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: 4326562
+          private-key: ${{ secrets.SHIPMATE_APP_PRIVATE_KEY }}
+      - env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          CID: ${{ inputs.comment }}
+          AT: ${{ inputs.at }}
+          W: ${{ matrix.w }}
+        run: |
+          now=$(date +%s); [ "$AT" -gt "$now" ] && sleep $(( AT - now ))
+          for c in rocket hooray; do
+            out=$(gh api -i -X POST "repos/$GITHUB_REPOSITORY/issues/comments/$CID/reactions" -f content=$c 2>&1)
+            echo "worker $W $c at $(date -u +%T.%N | cut -c1-12): $(printf '%s\n' "$out" | head -1) id=$(printf '%s' "$out" | grep -o '"id":[0-9]*' | head -1)"
+          done
