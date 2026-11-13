@@ -1,8 +1,0 @@
-name: probe-m26-noop
-on: workflow_dispatch
-permissions: {}
-jobs:
-  noop:
-    runs-on: ubuntu-slim
-    steps:
-      - run: "true"
