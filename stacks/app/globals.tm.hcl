@@ -1,3 +1,3 @@
 globals {
-  version = "47"
+  version = "48"
 }
