@@ -1,3 +1,3 @@
-resource "terraform_data-g2b" "probe" {
+resource "terraform_data" "probe" {
   input = "d-g2b"
 }
