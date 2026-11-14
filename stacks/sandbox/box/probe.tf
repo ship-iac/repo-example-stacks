@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "d-m26"
+  input = "d-605"
 }
