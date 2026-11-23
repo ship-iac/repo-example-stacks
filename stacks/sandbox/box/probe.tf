@@ -1,4 +1,4 @@
 resource "terraform_data" "probe" {
-  input = "d-605"
+  input = "m31-a"
 }
 # Base change for the v0.58.0 behind check; plans no change.
