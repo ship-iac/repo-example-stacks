@@ -1,0 +1,14 @@
+name: probe-rd
+on: pull_request
+permissions: {}
+jobs:
+  rd:
+    runs-on: ubuntu-latest
+    # The apply detect job's grants.
+    permissions: { contents: read, checks: read, actions: read, pull-requests: read }
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh api graphql -f query='query($owner:String!,$repo:String!,$pr:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$pr){reviewDecision}}}' -F owner="${GITHUB_REPOSITORY%/*}" -F repo="${GITHUB_REPOSITORY#*/}" -F pr="$PR" --jq '"RD=" + (.data.repository.pullRequest.reviewDecision // "null")'
