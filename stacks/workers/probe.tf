@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "m32-g3"
+  input = "m32-g3-race"
 }
