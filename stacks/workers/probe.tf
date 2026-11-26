@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "m34-smoke-f2"
+  input = "m34-smoke-c"
 }
