@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "m35-g3-dup"
+  input = "m35-g3-cancel"
 }
