@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "m35-g3-cancel"
+  input = "m35-g3-queued"
 }
