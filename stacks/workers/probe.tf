@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "m35-meas-20"
+  input = "m35-g2-two-wave"
 }
