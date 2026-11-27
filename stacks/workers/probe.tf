@@ -1,3 +1,3 @@
 resource "terraform_data" "probe" {
-  input = "m34-unflip"
+  input = "m35-meas-25"
 }
